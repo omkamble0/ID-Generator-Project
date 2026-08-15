@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.H.I.E.L.D. Certificate of Identity | ID Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Application Layout Styles */
+        :root {
+            --bg-color: #f9f9f9; --surface: #ffffff; --text-main: #111111;
+            --text-muted: #737373; --border: 1px solid #e5e5e5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; -webkit-font-smoothing: antialiased; }
+        
+        .left-panel { width: 38%; min-width: 380px; background: var(--surface); border-right: var(--border); display: flex; flex-direction: column; overflow-y: auto; padding: 40px;}
+        .right-panel { flex: 1; display: flex; justify-content: center; align-items: center; background-image: radial-gradient(#d4d4d4 1px, transparent 1px); background-size: 24px 24px; perspective: 1200px; }
+
+        /* Form Styles */
+        .input-group { display: flex; flex-direction: column; gap: 8px; flex: 1; margin-bottom: 24px; }
+        .input-row { display: flex; gap: 20px; }
+        label { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase;}
+        input { background: var(--bg-color); border: 1px solid transparent; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 0.95rem; border-radius: 6px; color: var(--text-main); transition: all 0.2s; width: 100%; }
+        input:focus { outline: none; border: 1px solid #d4d4d4; background: var(--surface); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+        h2 { font-size: 1.2rem; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!-- 1. SIDEBAR FORM                            -->
+    <!-- ========================================== -->
+    <div class="left-panel">
+        <h2>Configure S.H.I.E.L.D. ID</h2>
+        <div class="template-specific-form">
+            
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" data-sync="s-name" value="PHIL COULSON">
+                </div>
+                <div class="input-group">
+                    <label>Rank</label>
+                    <input type="text" data-sync="s-rank" value="FIELD AGENT">
+                </div>
+            </div>
+
+          
+
+            <div class="input-row">
+                <div class="input-group"><label>Sex</label><input type="text" data-sync="s-sex" value="M"></div>
+                <div class="input-group"><label>Hair</label><input type="text" data-sync="s-hair" value="BRN"></div>
+                <div class="input-group"><label>Height</label><input type="text" data-sync="s-height" value="5'9&quot;"></div>
+                <div class="input-group"><label>Exp. Date</label><input type="text" data-sync="s-exp" value="IND"></div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Serial No.</label>
+                    <input type="text" data-sync="s-serial" value="A-0846201">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Signature of Bearer</label>
+                <input type="text" data-sync="s-sig1" value="Phil Coulson">
+            </div>
+
+            <div class="input-group">
+                <label>Signature of Issuing Officer</label>
+                <input type="text" data-sync="s-sig2" value="Nick Fury">
+            </div>
+
+            <div class="input-group" style="margin-top:10px;">
+                <label>Upload Agent Photo</label>
+                <input type="file" id="dynamic-photo-upload" accept="image/*">
+            </div>
+            
+            <button id="flip-btn" style="padding: 12px; cursor: pointer; background: #111; color: #fff; border: none; border-radius: 6px; font-weight: 500;">Flip Card</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. CARD CANVAS                             -->
+    <!-- ========================================== -->
+    <div class="right-panel">
+        <div class="template-specific-card">
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Oswald:wght@500;700&family=Share+Tech+Mono&display=swap');
+                
+                .card-scene { width: 600px; height: 380px; perspective: 1000px; }
+                .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+                .card-inner.is-flipped { transform: rotateY(180deg); }
+                .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; border-radius: 12px; }
+                .card-back { transform: rotateY(180deg); }
+                
+                /* Front Background */
+                .shield-front {
+                    width: 100%; height: 100%;
+                    background-image: url('shield.jpg'); 
+                    background-size: cover;
+                    background-position: center;
+                    position: relative;
+                    font-family: 'Oswald', sans-serif;
+                    text-transform: uppercase;
+                    color: #111111;
+                }
+
+                /* Absolute Positions mapped to shieldimg.jpg */
+                .live-clearance {
+                    position: absolute;
+                    top: 118px; left: 165px; width: 250px; text-align: left;
+                    color: #cc0000; font-size: 16px; font-weight: 700; font-style: italic;
+                    letter-spacing: 1px; z-index: 10;
+                }
+
+                .live-name { position: absolute; top: 162px; left: 45px; font-size: 16px; font-weight: 500; letter-spacing: 0.5px; }
+                .live-rank { position: absolute; top: 155px; left: 265px; font-size: 16px; font-weight: 500; letter-spacing: 0.5px; }
+
+                .live-sex { position: absolute; top: 208px; left: 45px; font-size: 15px; }
+                .live-hair { position: absolute; top: 208px; left: 115px; font-size: 15px; }
+                .live-height { position: absolute; top: 208px; left: 195px; font-size: 15px; }
+                .live-exp { position: absolute; top: 208px; left: 290px; font-size: 15px; }
+
+                .live-sig1 {
+                    position: absolute; top: 250px; left: 45px;
+                    font-family: 'Caveat', cursive; font-size: 26px; text-transform: none; color: #000;
+                }
+                
+                .live-serial {
+                    position: absolute; top: 255px; left: 290px;
+                    font-family: 'Share Tech Mono', monospace; font-size: 16px; letter-spacing: 1px;
+                }
+                
+                .live-sig2 {
+                    position: absolute; top: 300px; left: 45px;
+                    font-family: 'Caveat', cursive; font-size: 26px; text-transform: none; color: #000;
+                }
+
+                /* Photo Box */
+                .shield-photo-box {
+                    position: absolute;
+                    top: 45px; left: 405px; width: 145px; height: 180px;
+                    background: transparent; z-index: 10;
+                }
+                
+                .shield-photo-box img { 
+                    width: 100%; height: 100%; object-fit: cover; 
+                    filter: grayscale(100%) contrast(1.1); 
+                }
+
+                /* Back Design */
+                .shield-back {
+                    width: 100%; height: 100%;
+                    background-color: #2b2b2b;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                }
+                .mag-stripe { width: 100%; height: 60px; background-color: #111; position: absolute; top: 40px; }
+                .disclaimer { font-family: 'Share Tech Mono', monospace; color: #666; font-size: 12px; position: absolute; bottom: 40px; text-align: center; width: 80%; }
+            </style>
+
+            <div class="card-scene">
+                <div class="card-inner" id="card-inner">
+                    
+                    <!-- Front Face -->
+                    <div class="card-face card-front">
+                        <div class="shield-front">
+                            
+                            
+                            <div class="live-name sync-s-name">PHIL COULSON</div>
+                            <div class="live-rank sync-s-rank">FIELD AGENT</div>
+                            
+                            <div class="live-sex sync-s-sex">M</div>
+                            <div class="live-hair sync-s-hair">BRN</div>
+                            <div class="live-height sync-s-height">5'9"</div>
+                            <div class="live-exp sync-s-exp">IND</div>
+                            
+                            <div class="live-sig1 sync-s-sig1">Phil Coulson</div>
+                            <div class="live-serial sync-s-serial">A-0846201</div>
+                            <div class="live-sig2 sync-s-sig2">Nick Fury</div>
+
+                            <div class="shield-photo-box">
+                                <img class="sync-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Photo">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Back Face -->
+                    <div class="card-face card-back">
+                        <div class="shield-back">
+                            <div class="mag-stripe"></div>
+                            <div class="disclaimer">PROPERTY OF S.H.I.E.L.D.<br>IF FOUND DROP IN ANY MAILBOX</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. VANILLA JS LOGIC                        -->
+    <!-- ========================================== -->
+    <script>
+        // Data Binding Engine
+        const textInputs = document.querySelectorAll('input[data-sync]');
+        textInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                const syncClass = `sync-${e.target.getAttribute('data-sync')}`;
+                document.querySelectorAll(`.${syncClass}`).forEach(target => { 
+                    target.innerText = e.target.value; 
+                });
+            });
+        });
+
+        // Photo Upload Handler via FileReader
+        const photoUpload = document.getElementById('dynamic-photo-upload');
+        if(photoUpload) {
+            photoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.querySelectorAll('.sync-photo').forEach(img => {
+                            img.src = event.target.result;
+                        });
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Flip Card Handler
+        const flipBtn = document.getElementById('flip-btn');
+        const cardInner = document.getElementById('card-inner');
+        if(flipBtn && cardInner) {
+            flipBtn.addEventListener('click', () => {
+                cardInner.classList.toggle('is-flipped');
+            });
+        }
+    </script>
+</body>
+</html>
