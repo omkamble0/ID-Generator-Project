@@ -1,0 +1,178 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM                            -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    <div class="input-group">
+        <label>Name</label>
+        <input type="text" data-sync="avg-name" value="DHRUV SEMWAL">
+    </div>
+    
+    <div class="input-group">
+        <label>Alias</label>
+        <input type="text" data-sync="avg-alias" value="SHADOW SPARK">
+    </div>
+    
+    <div class="input-group">
+        <label>Designation</label>
+        <input type="text" data-sync="avg-desig" value="SUPERHUMAN TRAINEE">
+    </div>
+    
+    <div class="input-group">
+        <label>Powers</label>
+        <input type="text" data-sync="avg-powers" value="ENERGY MANIPULATION, SPEED SURGE">
+    </div>
+
+    <div class="input-row">
+        <div class="input-group">
+            <label>Clearance Level</label>
+            <input type="text" data-sync="avg-clear" value="7">
+        </div>
+        <div class="input-group">
+            <label>Status</label>
+            <input type="text" data-sync="avg-status" value="ACTIVE">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>ID Number</label>
+        <input type="text" data-sync="avg-id" value="SHD-0425-DS">
+    </div>
+    
+    <div class="input-group" style="margin-top:20px;">
+        <label>Upload Photo</label>
+        <input type="file" id="dynamic-photo-upload" accept="image/*">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS                             -->
+<!-- ========================================== -->
+<div class="template-specific-card">
+    <style>
+        /* Importing a strict, condensed font for the S.H.I.E.L.D./Avengers aesthetic */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap');
+        
+        /* Adjusted scene dimensions for a vertical card */
+        .card-scene { width: 420px; height: 620px; perspective: 1000px; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.4); overflow: hidden; border-radius: 12px; }
+        .card-back { transform: rotateY(180deg); background-color: #2c3e50; }
+        
+        .avengers-bg {
+            width: 100%; height: 100%;
+            background-image: url('avengers_blank.jpg'); 
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* --- PHOTO SETTINGS --- */
+        .live-photo-box {
+            position: absolute;
+            /* Adjust these to fit inside the bordered box */
+            top: 125px; 
+            left: 22px; 
+            width: 160px; 
+            height: 235px; 
+            background: transparent;
+            z-index: 10;
+        }
+        
+        .live-photo-box img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 4px;
+        }
+
+        /* --- UNIVERSAL TEXT SETTINGS --- */
+        .live-text {
+            position: absolute;
+            font-family: 'Oswald', sans-serif;
+            color: #d1d5db; /* Light grayish-white */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        /* --- SPECIFIC TEXT POSITIONS --- */
+        /* Remember the cheat sheet: tweak 'top' for Up/Down, 'left' for Left/Right */
+        .pos-name   { top: 160px; left: 205px; font-size: 22px; width: 190px; }
+        .pos-alias  { top: 230px; left: 205px; font-size: 22px; width: 190px; }
+        
+        /* Designation has a shorter width so it naturally wraps to a second line */
+        .pos-desig  { top: 300px; left: 205px; font-size: 20px; width: 180px; line-height: 1.2; }
+        
+        .pos-powers { top: 405px; left: 22px;  font-size: 19px; width: 370px; }
+        .pos-clear  { top: 475px; left: 22px;  font-size: 26px; }
+        .pos-status { top: 475px; left: 205px; font-size: 24px; }
+        .pos-id     { top: 565px; left: 22px;  font-size: 28px; }
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="avengers-bg">
+                    
+                    <div class="live-photo-box">
+                        <img class="sync-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Photo">
+                    </div>
+                    
+                    <!-- Live Text Overlays -->
+                    <div class="live-text pos-name sync-avg-name">DHRUV SEMWAL</div>
+                    <div class="live-text pos-alias sync-avg-alias">SHADOW SPARK</div>
+                    <div class="live-text pos-desig sync-avg-desig">SUPERHUMAN TRAINEE</div>
+                    <div class="live-text pos-powers sync-avg-powers">ENERGY MANIPULATION, SPEED SURGE</div>
+                    <div class="live-text pos-clear sync-avg-clear">7</div>
+                    <div class="live-text pos-status sync-avg-status">ACTIVE</div>
+                    <div class="live-text pos-id sync-avg-id">SHD-0425-DS</div>
+                    
+                </div>
+            </div>
+            
+            <!-- BACK OF CARD (Optional placeholder) -->
+            <div class="card-face card-back">
+                <!-- If you have a back image, you can add it here -->
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 3. VANILLA JS LOGIC                        -->
+<!-- ========================================== -->
+<script>
+    const textInputs = document.querySelectorAll('input[data-sync]');
+    textInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const syncClass = `sync-${e.target.getAttribute('data-sync')}`;
+            document.querySelectorAll(`.${syncClass}`).forEach(target => { 
+                target.innerText = e.target.value; 
+            });
+        });
+    });
+
+    const photoUpload = document.getElementById('dynamic-photo-upload');
+    if(photoUpload) {
+        photoUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.querySelectorAll('.sync-photo').forEach(img => {
+                        img.src = event.target.result;
+                    });
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
