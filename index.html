@@ -19,10 +19,35 @@
 
         /* Left Panel */
         .left-panel { width: 38%; min-width: 380px; background: var(--surface); border-right: var(--border); display: flex; flex-direction: column; position: relative; z-index: 10; box-shadow: 4px 0 24px rgba(0,0,0,0.02); }
-        .title-block { padding: 50px 40px 30px; display: flex; flex-direction: column; }
+        
+        /* FIXED: Added flex: 1 so this block stretches to the bottom of the screen */
+        .title-block { padding: 50px 40px 40px; display: flex; flex-direction: column; flex: 1; }
+        
         .title-block h1 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; letter-spacing: -1.5px; }
         .title-block h1 span { font-weight: 600; }
         .subtitle { margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Panel Footer (Logo & Buy Me a Coffee) */
+        .panel-footer {
+            margin-top: auto; /* Pushes the footer to the absolute bottom of the title block */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+            gap: 16px;
+        }
+        .footer-link {
+            transition: opacity 0.2s, transform 0.2s;
+            display: inline-block;
+        }
+        .footer-link:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+        .footer-link img {
+            height: 36px; 
+            object-fit: contain;
+            border-radius: 6px;
+        }
 
         /* Dynamic Editor Form */
         .editor-section { display: none; flex-direction: column; flex: 1; background: var(--surface); border-top: var(--border); overflow: hidden;}
@@ -63,10 +88,28 @@
 <body>
 
     <div class="left-panel">
+        
+        <!-- FIXED: The Title Block now wraps the Header AND the Footer -->
         <div class="title-block">
-            <h1>ID<br>Studio <span>Pro</span></h1>
-            <div class="subtitle">Digital Identity Canvas</div>
+            <div>
+                <h1>ID<br>Studio <span>Pro</span></h1>
+                <div class="subtitle">Digital Identity Canvas</div>
+            </div>
+
+            <!-- BRANDING FOOTER (Now hides when you click a card!) -->
+            <div class="panel-footer">
+                <!-- Buy Me A Coffee Button -->
+                <a href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" class="footer-link">
+                    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+                </a>
+                
+                <!-- Your Custom Logo -->
+                <a href="#" target="_blank" class="footer-link">
+                    <img src="my-logo.png" alt="My Logo">
+                </a>
+            </div>
         </div>
+        <!-- End of Title Block -->
 
         <div class="editor-section" id="editor-section">
             <div class="editor-header">
@@ -75,6 +118,7 @@
             </div>
             <div id="dynamic-editor-form"></div>
         </div>
+
     </div>
 
     <div class="right-panel">
@@ -94,14 +138,19 @@
                 <h2>Call Me If You Get Lost</h2><p>License of Travel</p>
             </div>
 
-             <div class="grid-item template-card" data-template="Peter">
+             <div class="grid-item template-card" data-template="peter">
                 <div class="template-art"><img src="peter.jpg" alt="Peter"></div>
-                <h2>Peterrr griffin</h2><p>Scary driving license</p>
+                <h2>Peter Griffin</h2><p>Scary driving license</p>
             </div>
-            
-            <div class="grid-item template-card" data-template="hacienda">
-                <div class="template-art"><img src="hacienda.jpg" alt="FAC51 Hacienda"></div>
-                <h2>FAC51 Hacienda</h2><p>Vintage Club Pass</p>
+           
+            <div class="grid-item template-card" data-template="y2k">
+                <div class="template-art"><img src="y2k music.jpg" alt="Y2K Media Player"></div>
+                <h2>Y2K Media Player</h2><p>Windows 98 Aesthetic</p>
+            </div> 
+
+            <div class="grid-item template-card" data-template="avengers">
+                <div class="template-art"><img src="avengers play card.jpg" alt="Avengers"></div>
+                <h2>Avengers Initiative</h2><p>Agent ID Card</p>
             </div>
             
             <div class="grid-item template-card" data-template="mypaint">

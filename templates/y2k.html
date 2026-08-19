@@ -1,0 +1,176 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM (100% INLINE LOGIC)        -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-group" style="margin-bottom: 20px;">
+        <label>Select Theme Color</label>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <div onclick="document.body.style.setProperty('--y2k-color', '#1b7931')" style="width: 30px; height: 30px; background: #1b7931; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+            <div onclick="document.body.style.setProperty('--y2k-color', '#fbd000')" style="width: 30px; height: 30px; background: #fbd000; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+            <div onclick="document.body.style.setProperty('--y2k-color', '#c9f488')" style="width: 30px; height: 30px; background: #c9f488; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+            <div onclick="document.body.style.setProperty('--y2k-color', '#a8e4ef')" style="width: 30px; height: 30px; background: #a8e4ef; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+            <div onclick="document.body.style.setProperty('--y2k-color', '#cba5f5')" style="width: 30px; height: 30px; background: #cba5f5; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+            <div onclick="document.body.style.setProperty('--y2k-color', '#f8a3c1')" style="width: 30px; height: 30px; background: #f8a3c1; border-radius: 50%; border: 2px solid #000; cursor: pointer;"></div>
+        </div>
+    </div>
+    
+    <hr style="border: 0; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+
+    <div class="input-group">
+        <label>Artist (Front)</label>
+        <input type="text" value="Silk Sonic" oninput="document.querySelectorAll('.sync-y2k-artist').forEach(el => el.innerText = this.value)">
+    </div>
+    
+    <div class="input-group">
+        <label>Title (Front)</label>
+        <input type="text" value="Smokin Out The Window" oninput="document.querySelectorAll('.sync-y2k-title').forEach(el => el.innerText = this.value)">
+    </div>
+
+    <div class="input-group">
+        <label>Header Text (Back)</label>
+        <input type="text" value="HEADER" oninput="document.querySelectorAll('.sync-y2k-header').forEach(el => el.innerText = this.value)">
+    </div>
+    
+    <div class="input-group" style="margin-top:20px;">
+        <label>Front Album Art</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-front-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+    
+    <div class="input-group" style="margin-top:10px;">
+        <label>Back Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-back-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS (NEW 0-DEGREE ARCHITECTURE) -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="y2k-card" style="--y2k-color: #1b7931;">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arial:wght@900&display=swap');
+        
+        .card-scene { width: 500px; height: 500px; perspective: 1000px; }
+        .card-inner { width: 100%; height: 100%; position: relative; }
+        
+        .card-face { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            backface-visibility: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; background: #c0c0c0;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #ffffff; }
+        
+        .card-inner.is-flipped .card-front { transform: rotateY(-180deg); }
+        .card-inner.is-flipped .card-back { transform: rotateY(0deg); z-index: 3; }
+        
+        
+        /* ==================== FRONT CARD CSS ==================== */
+        .y2k-front-img { 
+            width: 103%; height: 92%; 
+            background-image: url('edited-image_4.jpg'); 
+            background-size: cover; background-position: center; 
+            position: absolute; z-index: 1; pointer-events: none; 
+        }
+
+        .front-color-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 10%;
+            background-color: var(--y2k-color) !important; z-index: 2; transition: background-color 0.3s;
+            display: flex; align-items: center; padding-left: 20px;
+        }
+        
+        .front-color-bar span { font-family: 'VT323', monospace; color: #fff; font-size: 38px; margin-top: 5px; }
+
+        .front-photo-box { position: absolute; top: 15%; left: 12.2%; width: 40%; height: 43.5%; z-index: 3; overflow: hidden; background: #ffffff; }
+        .front-photo-box img { width: 102.7%; height: 93.5%; object-fit: cover; }
+
+        .live-pixel-text {
+            position: absolute; font-family: 'VT323', monospace; color: #000;
+            font-size: 30px; z-index: 3; display: flex; align-items: center;
+            background: #ffffff; 
+        }
+        
+        .pos-artist { top: 60.5%; left: 23.8%; width: 55%; height: 6.5%; padding-left: 5px;}
+        .pos-title  { top: 70.5%; left: 23.8%; width: 55%; height: 6.5%; padding-left: 5px;}
+
+
+        /* ==================== BACK CARD CSS ==================== */
+        
+        .back-color-base {
+            width: 93%; height: 93%; position: absolute; top: 3.5%; left: 3.5%;
+            background-color: var(--y2k-color) !important; 
+            z-index: 1; transition: background-color 0.3s;
+        }
+
+        /* FIXED: Noticeably widened width to safely swallow all the grey gaps! */
+        .protector-header {
+            position: absolute; top: 59.5%; left: 9%; width: 85%; height: 8%;
+            background-color: #ffffff; z-index: 2;
+        }
+        .protector-button {
+            position: absolute; top: 82.5%; left: 8.5%; width: 87%; height: 7%;
+            background-color: #ffffff; z-index: 2;
+        }
+
+        /* FIXED: Added brightness and contrast filters to turn the grey into pure white! */
+        .y2k-back-img { 
+            width: 100%; height: 100%; 
+            background-image: url('edited-image_5.jpg'); 
+            background-size: cover; background-position: center; 
+            position: absolute; z-index: 3; pointer-events: none; 
+            mix-blend-mode: multiply;
+            filter: grayscale(100%) brightness(1.4) contrast(1.2); 
+        }
+
+        .back-photo-box { 
+            position: absolute; top: 10.3%; left: 9.9%; width: 77.5%; height: 46.6%; 
+            z-index: 4; overflow: hidden; 
+            background: #ffffff; 
+        }
+        .back-photo-box img { width: 95%; height: 100%; object-fit: cover; }
+        
+        .back-header-text {
+            position: absolute; top: 59.5%; left: 10%; width: 75%; height: 8%;
+            display: flex; align-items: center;
+            font-family: Arial, sans-serif; font-weight: 900; font-size: 20px; color: #000;
+            background: transparent; z-index: 4;
+        }
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <div class="card-face card-front">
+                <div class="y2k-front-img"></div>
+                <div class="front-color-bar"><span>Song</span></div>
+                
+                <div class="front-photo-box">
+                    <img class="sync-front-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Front Art">
+                </div>
+                
+                <div class="live-pixel-text pos-artist sync-y2k-artist">Silk Sonic</div>
+                <div class="live-pixel-text pos-title sync-y2k-title">Smokin Out The Window</div>
+            </div>
+            
+            <div class="card-face card-back">
+                <div class="back-color-base"></div>
+                
+                <!-- Magic Protector Layers -->
+                <div class="protector-header"></div>
+                <div class="protector-button"></div>
+                
+                <div class="y2k-back-img"></div>
+                
+                <div class="back-photo-box">
+                    <img class="sync-back-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Back Art">
+                </div>
+                
+                <div class="back-header-text sync-y2k-header">HEADER</div>
+            </div>
+            
+        </div>
+    </div>
+</div>

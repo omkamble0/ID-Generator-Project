@@ -42,6 +42,55 @@
         <label>Upload Photo</label>
         <input type="file" id="dynamic-photo-upload" accept="image/*">
     </div>
+<!-- ========================================== -->
+<!-- TEMPLATE GUIDE / SUGGESTION BOX            -->
+<!-- Paste this below the Photo Upload input    -->
+<!-- ========================================== -->
+<style>
+    .template-guide {
+        margin-top: 30px;
+        padding: 16px;
+        background: #f8fafc; /* Very light, clean gray/blue */
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #0f172a; /* Dark accent line on the left */
+        border-radius: 6px;
+    }
+    .template-guide h4 {
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .template-guide p {
+        margin: 0 0 12px 0;
+        font-size: 13px;
+        color: #475569;
+        line-height: 1.5;
+    }
+    .template-guide .ref-image {
+        width: 100%;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        margin-top: 5px;
+        /* Kept hidden by default, remove 'display: none;' to show it */
+        display: none; 
+    }
+</style>
+
+<div class="template-guide">
+    <h4>💡 Pro-Tips for this Template</h4>
+    <p><strong>Aesthetic:</strong> Comic Book / Graphic Novel</p>
+    <p>For best results, upload a well-lit portrait. The system will automatically apply a heavy ink filter and posterize the colors to match the comic book style.</p>
+    
+    <!-- To show an example image, remove the 'display: none;' from the CSS above and put your image name here -->
+    <img class="ref-image" src="example-reference.jpg" alt="Reference Style">
+</div>
+
 </div>
 
 <!-- ========================================== -->
@@ -49,10 +98,8 @@
 <!-- ========================================== -->
 <div class="template-specific-card">
     <style>
-        /* Importing a strict, condensed font for the S.H.I.E.L.D./Avengers aesthetic */
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap');
         
-        /* Adjusted scene dimensions for a vertical card */
         .card-scene { width: 420px; height: 620px; perspective: 1000px; }
         .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
         .card-inner.is-flipped { transform: rotateY(180deg); }
@@ -61,7 +108,7 @@
         
         .avengers-bg {
             width: 100%; height: 100%;
-            background-image: url('avengers_blank.jpg'); 
+            background-image: url('avengers%20play%20card.jpg'); 
             background-size: cover;
             background-position: center;
             position: relative;
@@ -70,7 +117,6 @@
         /* --- PHOTO SETTINGS --- */
         .live-photo-box {
             position: absolute;
-            /* Adjust these to fit inside the bordered box */
             top: 125px; 
             left: 22px; 
             width: 160px; 
@@ -84,13 +130,16 @@
             height: 100%; 
             object-fit: cover; 
             border-radius: 4px;
+            
+            /* FIXED: A much cleaner, graphic-novel style filter without the ugly deep-fry effect */
+            filter: contrast(1.4) saturate(1.3) brightness(0.95) sepia(0.15);
         }
 
         /* --- UNIVERSAL TEXT SETTINGS --- */
         .live-text {
             position: absolute;
             font-family: 'Oswald', sans-serif;
-            color: #d1d5db; /* Light grayish-white */
+            color: #d1d5db; 
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 10;
@@ -101,13 +150,9 @@
         }
 
         /* --- SPECIFIC TEXT POSITIONS --- */
-        /* Remember the cheat sheet: tweak 'top' for Up/Down, 'left' for Left/Right */
         .pos-name   { top: 160px; left: 205px; font-size: 22px; width: 190px; }
         .pos-alias  { top: 230px; left: 205px; font-size: 22px; width: 190px; }
-        
-        /* Designation has a shorter width so it naturally wraps to a second line */
         .pos-desig  { top: 300px; left: 205px; font-size: 20px; width: 180px; line-height: 1.2; }
-        
         .pos-powers { top: 405px; left: 22px;  font-size: 19px; width: 370px; }
         .pos-clear  { top: 475px; left: 22px;  font-size: 26px; }
         .pos-status { top: 475px; left: 205px; font-size: 24px; }
@@ -116,8 +161,6 @@
 
     <div class="card-scene">
         <div class="card-inner" id="card-inner">
-            
-            <!-- FRONT OF CARD -->
             <div class="card-face card-front">
                 <div class="avengers-bg">
                     
@@ -125,7 +168,6 @@
                         <img class="sync-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Photo">
                     </div>
                     
-                    <!-- Live Text Overlays -->
                     <div class="live-text pos-name sync-avg-name">DHRUV SEMWAL</div>
                     <div class="live-text pos-alias sync-avg-alias">SHADOW SPARK</div>
                     <div class="live-text pos-desig sync-avg-desig">SUPERHUMAN TRAINEE</div>
@@ -136,12 +178,6 @@
                     
                 </div>
             </div>
-            
-            <!-- BACK OF CARD (Optional placeholder) -->
-            <div class="card-face card-back">
-                <!-- If you have a back image, you can add it here -->
-            </div>
-            
         </div>
     </div>
 </div>
