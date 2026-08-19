@@ -47,8 +47,6 @@
                 </div>
             </div>
 
-          
-
             <div class="input-row">
                 <div class="input-group"><label>Sex</label><input type="text" data-sync="s-sex" value="M"></div>
                 <div class="input-group"><label>Hair</label><input type="text" data-sync="s-hair" value="BRN"></div>
@@ -99,7 +97,7 @@
                 /* Front Background */
                 .shield-front {
                     width: 100%; height: 100%;
-                    background-image: url('shield.jpg'); 
+                    background-image: url('shield.png'); 
                     background-size: cover;
                     background-position: center;
                     position: relative;
@@ -154,11 +152,11 @@
                 /* Back Design */
                 .shield-back {
                     width: 100%; height: 100%;
-                    background-color: #2b2b2b;
-                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    background-image: url('shield-back.png');
+                    background-size: cover;
+                    background-position: center;
+                    position: relative;
                 }
-                .mag-stripe { width: 100%; height: 60px; background-color: #111; position: absolute; top: 40px; }
-                .disclaimer { font-family: 'Share Tech Mono', monospace; color: #666; font-size: 12px; position: absolute; bottom: 40px; text-align: center; width: 80%; }
             </style>
 
             <div class="card-scene">
@@ -167,8 +165,6 @@
                     <!-- Front Face -->
                     <div class="card-face card-front">
                         <div class="shield-front">
-                            
-                            
                             <div class="live-name sync-s-name">PHIL COULSON</div>
                             <div class="live-rank sync-s-rank">FIELD AGENT</div>
                             
@@ -189,10 +185,7 @@
                     
                     <!-- Back Face -->
                     <div class="card-face card-back">
-                        <div class="shield-back">
-                            <div class="mag-stripe"></div>
-                            <div class="disclaimer">PROPERTY OF S.H.I.E.L.D.<br>IF FOUND DROP IN ANY MAILBOX</div>
-                        </div>
+                        <div class="shield-back"></div>
                     </div>
                     
                 </div>
