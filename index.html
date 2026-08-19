@@ -203,6 +203,9 @@
 
         .grid-item:hover { transform: translateY(-5px); }
         
+        /* FAST SEARCH FILTERING CLASS */
+        .grid-item.is-hidden { display: none !important; }
+        
         .template-art { 
             width: 100%; 
             border-radius: 12px; 
@@ -290,42 +293,42 @@
 
         <div class="grid-section" id="grid-section">
             <div class="grid-item template-card" data-template="mclovin">
-                <div class="template-art"><img src="mclovin-thumb.jpg" alt="McLovin"></div>
+                <div class="template-art"><img src="mclovin-thumb.jpg" alt="McLovin" loading="lazy"></div>
                 <h2>Hawaii DL</h2><p>The Classic McLovin Template</p>
             </div>
 
             <div class="grid-item template-card" data-template="spongebob-license">
-                <div class="template-art"><img src="spongebob-thumb.jpg" alt="Spongebob"></div>
+                <div class="template-art"><img src="spongebob-thumb.jpg" alt="Spongebob" loading="lazy"></div>
                 <h2>Bikini Bottom</h2><p>Boating School License</p>
             </div>
 
             <div class="grid-item template-card" data-template="tyler">
-                <div class="template-art"><img src="tyler-thumb.jpg" alt="Tyler"></div>
+                <div class="template-art"><img src="tyler-thumb.jpg" alt="Tyler" loading="lazy"></div>
                 <h2>Call Me If You Get Lost</h2><p>License of Travel</p>
             </div>
 
              <div class="grid-item template-card" data-template="peter">
-                <div class="template-art"><img src="peter.jpg" alt="Peter"></div>
+                <div class="template-art"><img src="peter.jpg" alt="Peter" loading="lazy"></div>
                 <h2>Peter Griffin</h2><p>Scary driving license</p>
             </div>
            
             <div class="grid-item template-card" data-template="y2k">
-                <div class="template-art"><img src="y2k music.jpg" alt="Y2K Media Player"></div>
+                <div class="template-art"><img src="y2k music.jpg" alt="Y2K Media Player" loading="lazy"></div>
                 <h2>Y2K Media Player</h2><p>Windows 98 Aesthetic</p>
             </div> 
 
             <div class="grid-item template-card" data-template="avengers">
-                <div class="template-art"><img src="avengers play card.jpg" alt="Avengers"></div>
+                <div class="template-art"><img src="avengers play card.jpg" alt="Avengers" loading="lazy"></div>
                 <h2>Avengers Initiative</h2><p>Agent ID Card</p>
             </div>
             
             <div class="grid-item template-card" data-template="mypaint">
-                <div class="template-art"><img src="custom-card1.png" alt="My Own Tempo"></div>
+                <div class="template-art"><img src="custom-card1.png" alt="My Own Tempo" loading="lazy"></div>
                 <h2>My Own Tempo</h2><p>Custom MS Paint Zine</p>
             </div>
             
             <div class="grid-item template-card" data-template="shield">
-                <div class="template-art"><img src="shield.png" alt="Shield"></div>
+                <div class="template-art"><img src="shield.png" alt="Shield" loading="lazy"></div>
                 <h2>S.H.I.E.L.D.</h2><p>Certificate of Identity</p>
             </div>
         </div>
@@ -344,11 +347,6 @@
     <script>
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-closed');
-        }
-
-        // Placeholder search handler (Integrate your JS metadata dataset here)
-        function handleSearch(query) {
-            // Space reserved for Fuse.js query execution logic
         }
     </script>
     <script src="script.js"></script>
