@@ -1,11 +1,103 @@
+// --- SEARCH METADATA CATALOG ---
+const templateCatalog = [
+    {
+        id: 'mclovin',
+        title: 'Hawaii DL',
+        subtitle: 'The Classic McLovin Template',
+        tags: ['mclovin', 'fogell', 'superbad', 'hawaii', 'fake id', 'driver license', 'movie', 'comedy', '2000s', 'meme', 'christopher mintz plasse', 'seth rogen', 'organ donor']
+    },
+    {
+        id: 'spongebob-license',
+        title: 'Bikini Bottom',
+        subtitle: 'Boating School License',
+        tags: ['spongebob', 'squarepants', 'patrick star', 'squidward', 'mr krabs', 'sandy cheeks', 'boating school', 'bikini bottom', 'mrs puff', 'cartoon', 'nickelodeon', 'driver license', 'credit card', 'pineapple bank']
+    },
+    {
+        id: 'tyler',
+        title: 'Call Me If You Get Lost',
+        subtitle: 'License of Travel',
+        tags: ['tyler the creator', 'call me if you get lost', 'cmiycgl', 'golf wang', 'hip hop', 'album art', 'music', 'passport', 'travel license', 'rap', 'tyler boudelaire']
+    },
+    {
+        id: 'peter',
+        title: 'Peter Griffin',
+        subtitle: 'Scary driving license',
+        tags: ['peter griffin', 'family guy', 'quahog', 'seth macfarlane', 'cartoon', 'tv show', 'humor', 'comedy', 'driver license', 'meme']
+    },
+    {
+        id: 'y2k',
+        title: 'Y2K Media Player',
+        subtitle: 'Windows 98 Aesthetic',
+        tags: ['y2k', 'windows 98', 'winamp', 'media player', 'retro', 'vintage', '90s', 'cyber', 'synthwave', 'aesthetic', 'music player', 'skin']
+    },
+    {
+        id: 'avengers',
+        title: 'Avengers Initiative',
+        subtitle: 'Agent ID Card',
+        tags: ['avengers', 'marvel', 'shield', 'superhero', 'comic', 'mcu', 'agent id', 'badge', 'security pass', 'initiative', 'nick fury']
+    },
+    {
+        id: 'mypaint',
+        title: 'My Own Tempo',
+        subtitle: 'Custom MS Paint Zine',
+        tags: ['my own tempo', 'ms paint', 'zine', 'art', 'doodle', 'creative', 'custom', 'drawing', 'retro pc', 'illustration']
+    },
+    {
+        id: 'shield',
+        title: 'S.H.I.E.L.D.',
+        subtitle: 'Certificate of Identity',
+        tags: ['shield', 'marvel', 'avengers', 'nick fury', 'agent', 'government badge', 'security clearance', 'certificate of identity', 'mcu', 'hydra']
+    }
+];
+
+// --- FUSE.JS SEARCH ENGINE INTEGRATION ---
+let fuseInstance = null;
+
+function initSearchEngine() {
+    if (typeof Fuse !== 'undefined') {
+        fuseInstance = new Fuse(templateCatalog, {
+            keys: [
+                { name: 'title', weight: 0.4 },
+                { name: 'tags', weight: 0.4 },
+                { name: 'subtitle', weight: 0.2 }
+            ],
+            threshold: 0.4,
+            distance: 100
+        });
+    }
+}
+
+function handleSearch(query) {
+    if (!fuseInstance) initSearchEngine();
+    
+    const cards = document.querySelectorAll('.grid-item');
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+        cards.forEach(card => card.style.display = 'inline-block');
+        return;
+    }
+
+    if (fuseInstance) {
+        const matchedIds = fuseInstance.search(trimmedQuery).map(result => result.item.id);
+        cards.forEach(card => {
+            const cardId = card.getAttribute('data-template');
+            card.style.display = matchedIds.includes(cardId) ? 'inline-block' : 'none';
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initSearchEngine);
+
+// --- DOM REFERENCES & NAVIGATION ---
 const gridSection = document.getElementById('grid-section');
 const workspaceSection = document.getElementById('workspace-section');
 const editorSection = document.getElementById('editor-section');
 const titleBlock = document.querySelector('.title-block');
 const formContainer = document.getElementById('dynamic-editor-form');
 const cardContainer = document.getElementById('template-container');
+const searchBarContainer = document.querySelector('.search-bar-container');
 
-// Navigation
 document.querySelectorAll('.template-card').forEach(card => {
     card.addEventListener('click', (e) => {
         const templateName = e.currentTarget.getAttribute('data-template');
@@ -13,6 +105,7 @@ document.querySelectorAll('.template-card').forEach(card => {
         titleBlock.style.display = 'none';
         workspaceSection.style.display = 'flex';
         editorSection.style.display = 'flex';
+        if (searchBarContainer) searchBarContainer.style.display = 'none';
         loadTemplate(templateName);
     });
 });
@@ -20,8 +113,9 @@ document.querySelectorAll('.template-card').forEach(card => {
 function showGrid() {
     workspaceSection.style.display = 'none';
     editorSection.style.display = 'none';
-    gridSection.style.display = 'grid';
+    gridSection.style.display = 'block';
     titleBlock.style.display = 'flex';
+    if (searchBarContainer) searchBarContainer.style.display = 'flex';
 }
 
 // Fetch and Split Logic
@@ -113,8 +207,8 @@ function downloadID() {
         link.click();
     });
 }
-// --- BIKINI BOTTOM MASTER DATA ENGINE ---
 
+// --- BIKINI BOTTOM MASTER DATA ENGINE ---
 const bikiniBottomPresets = {
     spongebob: { name: "SPONGEBOB SQUAREPANTS", address: "124 CONCH ST.", city: "BIKINI BOTTOM", lic: "A1356021", class: "S", exp: "12-14-03", dob: "07-14-86", sex: "M", hair: "YELLOW", eyes: "BLUE", ht: "0-04", wt: "1oz" },
     patrick_driver: { name: "Patrick Star", address: "120 Conch St.", city: "Bikini Bottom", lic: "A1376047", class: "S", exp: "12-14-03", dob: "", sex: "M", hair: "PINK", eyes: "BLACK", ht: "0.06", wt: "2 oz" },
@@ -140,10 +234,8 @@ window.switchSpongeBobVariant = function(type) {
 
     if (!cardWrapper) return;
 
-    // 1. APPLY CSS THEME
     cardWrapper.className = `theme-${type}`;
 
-    // 2. TOGGLE VIEWS
     if (type === 'credit1' || type === 'credit2') {
         viewLicense.style.display = 'none';
         viewCredit.style.display = 'flex';
@@ -174,7 +266,6 @@ window.switchSpongeBobVariant = function(type) {
         backDept.innerText = "BIKINI BOTTOM DEPT.";
     }
 
-    // 3. AUTO-FILL DATA
     const data = bikiniBottomPresets[type];
     if (data) {
         const setInput = (key, value) => {
@@ -189,4 +280,4 @@ window.switchSpongeBobVariant = function(type) {
             setInput(k, data[k] || "");
         });
     }
-}
+};

@@ -129,12 +129,66 @@
         /* Right Panel */
         .right-panel { flex: 1; height: 100vh; background: var(--bg-color); position: relative; overflow-y: auto; transition: all 0.3s ease; }
         
-        /* Masonry Layout: Flow items into naturally available vertical spaces */
+        /* Centered Adaptive Search Bar Header */
+        .search-bar-container {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: linear-gradient(to bottom, var(--bg-color) 70%, rgba(249,249,249,0));
+            padding: 24px 60px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .search-bar-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Expands when sidebar collapses */
+        body.sidebar-closed .search-bar-wrapper {
+            max-width: 680px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 46px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            background: var(--surface);
+            border: var(--border);
+            border-radius: 50px;
+            color: var(--text-main);
+            box-shadow: var(--shadow-subtle);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a3a3a3;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Masonry Layout */
         .grid-section { 
             columns: 300px; 
             column-gap: 40px; 
-            padding: 60px; 
-            padding-top: 80px;
+            padding: 20px 60px 60px; 
         }
 
         /* Clickable bounding box tightly wraps item contents only */
@@ -223,6 +277,17 @@
     </div>
 
     <div class="right-panel">
+        <!-- Top Centered Search Bar -->
+        <div class="search-bar-container">
+            <div class="search-bar-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="template-search" class="search-input" placeholder="Search templates..." oninput="handleSearch(this.value)">
+            </div>
+        </div>
+
         <div class="grid-section" id="grid-section">
             <div class="grid-item template-card" data-template="mclovin">
                 <div class="template-art"><img src="mclovin-thumb.jpg" alt="McLovin"></div>
@@ -274,9 +339,16 @@
         </div>
     </div>
 
+    <!-- Fuse.js Search Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script>
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-closed');
+        }
+
+        // Placeholder search handler (Integrate your JS metadata dataset here)
+        function handleSearch(query) {
+            // Space reserved for Fuse.js query execution logic
         }
     </script>
     <script src="script.js"></script>
