@@ -1,0 +1,179 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: AREA 51 PERMIT            -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    <div class="input-group">
+        <label>Operator Name</label>
+        <input type="text" value="A. LEON" oninput="document.querySelectorAll('.sync-a51-name').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+    <div class="input-group">
+        <label>Address Line 1</label>
+        <input type="text" value="HIGHWAY 375 ABDUCTION LANE" oninput="document.querySelectorAll('.sync-a51-addr1').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+    <div class="input-group">
+        <label>Address Line 2</label>
+        <input type="text" value="EARTH, MILKY WAY GALAXY" oninput="document.querySelectorAll('.sync-a51-addr2').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+    
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group"><label>Sex</label><input type="text" value="YES" oninput="document.querySelectorAll('.sync-a51-sex').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+        <div class="input-group"><label>Height</label><input type="text" value="3-2" oninput="document.querySelectorAll('.sync-a51-height').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+        <div class="input-group"><label>Weight</label><input type="text" value="35" oninput="document.querySelectorAll('.sync-a51-weight').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+    </div>
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group"><label>Hair</label><input type="text" value="NONE" oninput="document.querySelectorAll('.sync-a51-hair').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+        <div class="input-group"><label>Eyes</label><input type="text" value="BLACK" oninput="document.querySelectorAll('.sync-a51-eyes').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+    </div>
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group"><label>Birthdate</label><input type="text" value="01/08/1835" oninput="document.querySelectorAll('.sync-a51-dob').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+        <div class="input-group"><label>Expiration</label><input type="text" value="08/16/3001" oninput="document.querySelectorAll('.sync-a51-exp').forEach(el => el.innerText = this.value.toUpperCase())"></div>
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Alien Photo (Transparent PNG is best)</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-a51-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: AREA 51 PERMIT             -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="area51-card">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Barcode+39&family=Open+Sans:wght@700;800&display=swap');
+        
+        .card-scene { width: 500px; height: 315px; perspective: 1000px; font-family: 'Open Sans', sans-serif; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            overflow: hidden; backface-visibility: hidden;
+        }
+        
+        .card-front { background: #ffffff; transform: rotateY(0deg); z-index: 2; }
+        .card-back { background: #f0f0f0; transform: rotateY(180deg); z-index: 1; border: 1px solid #ccc; }
+        
+        /* ==================== FRONT CARD CSS ==================== */
+        .a51-header {
+            width: 100%; height: 17%;
+            background: linear-gradient(90deg, #c0c8f5 0%, #3540a8 15%, #3540a8 85%, #c0c8f5 100%);
+            color: #ffffff; display: flex; align-items: center; justify-content: center;
+            font-family: 'Archivo Black', sans-serif; font-size: 26px; letter-spacing: 1px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        .a51-numbers { font-size: 13px; font-weight: 800; text-align: center; margin-top: 4px; color: #000; letter-spacing: 1.5px; }
+        
+        .a51-red-line { display: flex; align-items: center; justify-content: center; color: #ef3333; font-weight: 800; font-size: 15px; margin: 3px 0; }
+        .a51-red-line::before, .a51-red-line::after { content: ""; flex: 1; border-bottom: 2px solid #ef3333; margin: 0 10px; }
+
+        .a51-data-left { position: absolute; top: 31%; left: 4%; width: 56%; }
+        
+        .a51-blue-text { color: #435bc2; font-weight: 800; font-size: 12px; line-height: 1.3; }
+        .a51-name-display { font-size: 15px; color: #e53935; }
+        
+        .a51-checkboxes { font-size: 11px; color: #555; margin-top: 10px; line-height: 1.7; font-weight: 700; }
+        .a51-checkboxes span { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 10px; margin: 0 4px; color: #000; }
+        .a51-checkboxes strong { color: #000; }
+        
+        .a51-stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 10px; text-align: center; }
+        .a51-dates-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 5px; text-align: center; }
+        
+        .stat-label { font-size: 10px; color: #555; font-weight: 700; }
+        .stat-value { font-size: 13px; color: #000; font-weight: 800; }
+
+        .a51-stamp {
+            position: absolute; top: 48%; left: 16%; width: 140px; height: 140px;
+            border: 2px solid #7890cd; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            opacity: 0.4; transform: rotate(-15deg); pointer-events: none; z-index: 0;
+        }
+        .a51-stamp-inner {
+            width: 125px; height: 125px; border: 1px dashed #7890cd; border-radius: 50%;
+            text-align: center; font-size: 12px; font-weight: 800; color: #526ab0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .a51-signature { position: absolute; bottom: 5%; left: 4%; width: 45%; border-bottom: 2px solid #000; z-index: 2;}
+        .a51-sig-text { font-family: 'Brush Script MT', cursive; font-size: 32px; position: absolute; bottom: -5px; left: 25px; color: #000; }
+
+        /* The transparent PNG box with galaxy background */
+        .a51-photo-box {
+            position: absolute; top: 31%; right: 4%; width: 33%; height: 62%;
+            background: radial-gradient(circle at center, #358bd8 0%, #152d8e 100%);
+            border-radius: 6px; box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
+            overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+        }
+        /* CSS Stars for the photo background */
+        .a51-photo-box::before {
+            content: "✦   ✦    ✦ \A    ✦    ✦ \A ✦     ✦"; 
+            position: absolute; top: 15px; left: 15px; white-space: pre-wrap; 
+            color: rgba(255,255,255,0.6); font-size: 14px; pointer-events: none;
+        }
+        .a51-photo-box img { width: 95%; height: 95%; object-fit: contain; z-index: 2; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));}
+
+        /* ==================== BACK CARD CSS ==================== */
+        .a51-back-bar { width: 100%; height: 20%; background: #000; margin-top: 10%; }
+        .a51-back-text { padding: 20px; font-size: 10px; color: #333; text-align: justify; font-weight: 700; line-height: 1.4;}
+        .a51-back-barcode { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-family: 'Libre Barcode 39', cursive; font-size: 45px; color: #000; }
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="a51-header">UFO OPERATOR'S LICENSE</div>
+                <div class="a51-numbers">329216684557 &nbsp; 602-993-3377 &nbsp; 029411 U235238</div>
+                <div class="a51-red-line">AREA-51 Permit</div>
+                
+                <div class="a51-data-left">
+                    <div class="a51-blue-text a51-name-display sync-a51-name">A. LEON</div>
+                    <div class="a51-blue-text sync-a51-addr1">HIGHWAY 375 ABDUCTION LANE</div>
+                    <div class="a51-blue-text sync-a51-addr2">EARTH, MILKY WAY GALAXY</div>
+                    
+                    <div class="a51-checkboxes">
+                        CLASS C <span>X</span> ORGAN TAKER<br>
+                        ENDRSE <strong>B,F,R,</strong> <span>X</span> ABDUCTION AGENT
+                    </div>
+                    
+                    <div class="a51-stats-grid">
+                        <div><div class="stat-label">SEX</div><div class="stat-value sync-a51-sex">YES</div></div>
+                        <div><div class="stat-label">HEIGHT</div><div class="stat-value sync-a51-height">3-2</div></div>
+                        <div><div class="stat-label">WEIGHT</div><div class="stat-value sync-a51-weight">35</div></div>
+                        <div><div class="stat-label">HAIR</div><div class="stat-value sync-a51-hair">NONE</div></div>
+                        <div><div class="stat-label">EYES</div><div class="stat-value sync-a51-eyes">BLACK</div></div>
+                    </div>
+                    <div class="a51-dates-grid">
+                        <div><div class="stat-label">BIRTHDATE</div><div class="stat-value sync-a51-dob">01/08/1835</div></div>
+                        <div><div class="stat-label">EXPIRATION</div><div class="stat-value sync-a51-exp">08/16/3001</div></div>
+                    </div>
+                </div>
+
+                <!-- CSS Generated Stamp -->
+                <div class="a51-stamp">
+                    <div class="a51-stamp-inner">UNITED STATES<br>GOVERNMENT<br>PROPERTY</div>
+                </div>
+
+                <div class="a51-signature">
+                    <span style="font-size: 14px; font-weight:800; color:#000;">X</span>
+                    <span class="a51-sig-text sync-a51-name">A. Leon</span>
+                </div>
+                
+                <div class="a51-photo-box">
+                    <img class="sync-a51-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Alien Photo">
+                </div>
+            </div>
+
+            <!-- BACK OF CARD -->
+            <div class="card-face card-back">
+                <div class="a51-back-bar"></div>
+                <div class="a51-back-text">
+                    THIS PERMIT IS THE PROPERTY OF THE UNITED STATES GOVERNMENT. THE USE OF THIS CARD BY ANY PERSON OTHER THAN THE AUTHORIZED OPERATOR IS STRICTLY PROHIBITED. IF FOUND, DROP IN ANY SECURE US MAIL RECEPTACLE FOR RETURN TO NEVADA TEST AND TRAINING RANGE.
+                </div>
+                <div class="a51-back-barcode sync-a51-name">A. LEON</div>
+            </div>
+
+        </div>
+    </div>
+</div>

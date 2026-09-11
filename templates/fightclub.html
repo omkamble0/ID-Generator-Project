@@ -1,0 +1,199 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: FIGHT CLUB ID             -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-row">
+        <div class="input-group">
+            <label>First Name</label>
+            <input type="text" value="TYLER" oninput="document.querySelectorAll('.sync-fc-first').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" value="DURDEN" oninput="document.querySelectorAll('.sync-fc-last').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>Name (In Chinese)</label>
+        <input type="text" value="傅 勤 斯" oninput="document.querySelectorAll('.sync-fc-zh').forEach(el => el.innerText = this.value)">
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>Grade</label>
+            <input type="text" value="A2C" oninput="document.querySelectorAll('.sync-fc-grade').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>Age</label>
+            <input type="text" value="29" oninput="document.querySelectorAll('.sync-fc-age').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>Service Number</label>
+        <input type="text" value="FC 14793036" oninput="document.querySelectorAll('.sync-fc-svc').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>Serial Number</label>
+            <input type="text" value="632025" oninput="document.querySelectorAll('.sync-fc-serial').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>Date Expired</label>
+            <input type="text" value="28 October 1965" oninput="document.querySelectorAll('.sync-fc-exp').forEach(el => el.innerText = this.value)">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Mugshot Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-fc-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: FIGHT CLUB ID              -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="fightclub-card">
+    <style>
+        /* Importing typewriter, stamp, and barcode fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Anton&family=Libre+Barcode+39&display=swap');
+        
+        .card-scene { width: 520px; height: 355px; perspective: 1000px; font-family: 'Special Elite', monospace; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; backface-visibility: hidden;
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; background-color: #7ab3a8; }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #7ab3a8; border: 2px solid #2a4c44; box-sizing: border-box; }
+
+        /* The Master Background Image */
+        .fc-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: url('fight club id card.jpg');
+            background-size: 100% 100%; background-position: center;
+            z-index: 1; pointer-events: none;
+        }
+
+        /* ========================================== */
+        /* PRECISION BLOCKERS (To hide original text) */
+        /* ========================================== */
+        /* FIXED: These are now razor-thin and match the paper color to avoid hiding the lines! */
+        .blocker { position: absolute; z-index: 2; display: flex; align-items: flex-end; justify-content: flex-start; overflow: hidden; white-space: nowrap; }
+        
+        /* Photo Area Blocker */
+        .blk-photo { top: 11%; left: 4.8%; width: 28%; height: 40.5%; background: #a5ccc4; z-index: 2; }
+        .blk-photo img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.2) grayscale(100%) contrast(1.6) brightness(0.9); mix-blend-mode: multiply; }
+        
+        /* Black Text Box Blocker */
+        .blk-blackbox { top: 51.5%; left: 4.8%; width: 28%; height: 16%; background: #131414; flex-direction: column; justify-content: center; align-items: center; }
+        .fc-black-text { color: #d0e4df; text-align: center; font-size: 13px; font-weight: bold; line-height: 1.1; letter-spacing: 0.5px; overflow: hidden; text-overflow: clip; width: 100%;}
+
+        /* Typewriter Text Blockers */
+        .blk-zh { top: 6%; left: 45.5%; width: 28%; height: 9%; background: #7ab3a8; font-family: sans-serif; font-size: 26px; opacity: 0.85; padding-bottom: 2px; }
+        .blk-en { top: 17%; left: 45.5%; width: 50%; height: 8%; background: #7ab3a8; font-size: 22px; font-weight: bold; letter-spacing: 1px; padding-bottom: 2px;}
+        
+        .blk-grade { top: 36%; left: 54%; width: 20%; height: 7%; background: #7eb6ab; font-size: 20px; font-weight: bold; padding-bottom: 2px;}
+        .blk-svc { top: 49.5%; left: 58%; width: 35%; height: 7%; background: #81b9ad; font-size: 20px; font-weight: bold; letter-spacing: 1px; padding-bottom: 2px;}
+        .blk-age { top: 63%; left: 51%; width: 15%; height: 7%; background: #82baa0; font-size: 20px; font-weight: bold; padding-bottom: 2px;}
+        
+        /* Serial: Specifically sized to NOT cover the "號" character */
+        .blk-serial { top: 76%; left: 4%; width: 25.5%; height: 11%; background: #7cb5aa; font-family: 'Anton', sans-serif; font-size: 42px; color: #174254; mix-blend-mode: multiply; letter-spacing: 2px; align-items: center;}
+        
+        .blk-exp { top: 88%; left: 61%; width: 35%; height: 7%; background: #7ab4a9; font-size: 19px; font-weight: bold; padding-bottom: 2px;}
+
+        /* Typewriter Ink Bleed Effect */
+        .typewriter-ink { text-shadow: 0px 0px 1px rgba(28, 43, 40, 0.6); color: #0b1a16; }
+
+        /* ========================================== */
+        /* CUSTOM BACK SIDE (Realistic ID Card Back)  */
+        /* ========================================== */
+        .fc-back-noise {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.25'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply; z-index: 2; pointer-events: none;
+        }
+        .mag-stripe {
+            position: absolute; top: 12%; left: 0; width: 100%; height: 15%;
+            background-color: #1a1a1a; z-index: 3; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .back-text-area {
+            position: absolute; top: 35%; left: 5%; width: 90%; z-index: 4;
+            color: #1c2b28; font-family: sans-serif; font-size: 12px; line-height: 1.4;
+            text-align: justify;
+        }
+        .back-barcode {
+            position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
+            font-family: 'Libre Barcode 39', cursive; font-size: 50px; color: #1c2b28; z-index: 4;
+        }
+
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="fc-bg-img"></div>
+                
+                <div class="blocker blk-photo">
+                    <img class="sync-fc-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Mugshot">
+                </div>
+                
+                <div class="blocker blk-blackbox">
+                    <div class="fc-black-text sync-fc-last">DURDEN,</div>
+                    <div class="fc-black-text sync-fc-first">TYLER</div>
+                    <div class="fc-black-text sync-fc-svc" style="margin-top: 4px;">FC 14793036</div>
+                </div>
+
+                <div class="blocker blk-zh">
+                    <span class="sync-fc-zh typewriter-ink">傅 勤 斯</span>
+                </div>
+
+                <div class="blocker blk-en">
+                    <span class="typewriter-ink"><span class="sync-fc-last">DURDEN</span>, <span class="sync-fc-first">TYLER</span></span>
+                </div>
+
+                <div class="blocker blk-grade">
+                    <span class="sync-fc-grade typewriter-ink">A2C</span>
+                </div>
+
+                <div class="blocker blk-svc">
+                    <span class="sync-fc-svc typewriter-ink">FC 14793036</span>
+                </div>
+
+                <div class="blocker blk-age">
+                    <span class="sync-fc-age typewriter-ink">29</span>
+                </div>
+
+                <div class="blocker blk-serial">
+                    <span class="sync-fc-serial">632025</span>
+                </div>
+
+                <div class="blocker blk-exp">
+                    <span class="sync-fc-exp typewriter-ink">28 October 1965</span>
+                </div>
+            </div>
+
+            <!-- BACK OF CARD -->
+            <div class="card-face card-back">
+                <div class="fc-back-noise"></div>
+                <div class="mag-stripe"></div>
+                
+                <div class="back-text-area">
+                    <strong>PROPERTY OF PROJECT MAYHEM</strong><br>
+                    This identification card is the property of the issuing authority. Unauthorized use, duplication, or alteration is strictly prohibited and punishable by immediate termination of membership.<br><br>
+                    <strong>IF FOUND, DO NOT ASK QUESTIONS. DO NOT TALK ABOUT IT.</strong> Return to the nearest Paper Street Soap Company drop point.
+                </div>
+                
+                <div class="back-barcode sync-fc-serial">632025</div>
+            </div>
+            
+        </div>
+    </div>
+</div>

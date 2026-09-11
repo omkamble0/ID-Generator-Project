@@ -1,0 +1,187 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: OSCORP INDUSTRIES         -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" value="Peter Parker" oninput="document.querySelectorAll('.sync-osc-name').forEach(el => el.innerText = this.value)">
+    </div>
+
+    <div class="input-group">
+        <label>Department / Laboratory</label>
+        <input type="text" value="GENETICS LABORATORY" oninput="document.querySelectorAll('.sync-osc-dept').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>Role (Left Side)</label>
+            <!-- JS splits the word and joins it with line breaks for perfect vertical alignment! -->
+            <input type="text" value="STAFF" oninput="document.querySelectorAll('.sync-osc-role-vert').forEach(el => el.innerHTML = this.value.toUpperCase().split('').join('<br>'))">
+        </div>
+        <div class="input-group">
+            <label>ID Number (Right Side)</label>
+            <input type="text" value="A00810" oninput="document.querySelectorAll('.sync-osc-id-vert').forEach(el => el.innerHTML = this.value.toUpperCase().split('').join('<br>'))">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>Barcode Serial (Back Side)</label>
+        <input type="text" value="OSC-001" oninput="document.querySelectorAll('.sync-osc-serial-vert').forEach(el => el.innerHTML = this.value.toUpperCase().split('').join(' '))">
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Employee Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-osc-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: OSCORP INDUSTRIES          -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="oscorp-card">
+    <style>
+        /* Importing Montserrat for the logo, Libre Barcode for the back */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&family=Libre+Barcode+39&display=swap');
+        
+        .card-scene { width: 330px; height: 520px; perspective: 1000px; font-family: 'Times New Roman', Times, serif; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; backface-visibility: hidden;
+            background-color: #ffffff;
+            border: 4px solid #1a1a1a;
+            box-sizing: border-box;
+            padding: 4px;
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #d1d3d4; border: none; padding: 0;}
+
+        /* Outer Inner Border */
+        .osc-border { border: 1px solid #1a1a1a; border-radius: 10px; height: 100%; width: 100%; display: flex; flex-direction: column; position: relative; box-sizing: border-box; padding: 25px 15px 15px 15px;}
+
+        /* ==================== FRONT CARD CSS ==================== */
+        
+        /* Top Logo Area */
+        .osc-header { text-align: center; }
+        .osc-title { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 52px; color: #1a1a1a; letter-spacing: -2px; line-height: 0.9; transform: scaleX(1.1); }
+        .osc-sub { font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 11px; color: #1a1a1a; letter-spacing: 7px; margin-top: 5px; padding-left: 7px;}
+
+        /* Middle Photo Area */
+        .osc-mid { display: flex; justify-content: space-between; align-items: center; flex: 1; margin: 15px 0; }
+        
+        /* Vertical Text (Using standard stacking, NO buggy flexbox/writing-modes) */
+        .osc-side-text { font-size: 34px; font-weight: bold; line-height: 1.1; text-align: center; width: 40px;}
+        .osc-side-right { font-size: 24px; font-weight: bold; line-height: 1.2; text-align: center; width: 40px;}
+        .osc-side-right span { font-size: 14px; display: block; margin-bottom: 5px; letter-spacing: 0;}
+        
+        .osc-photo-box { width: 175px; height: 230px; border: 3px solid #1a1a1a; background: #e0e0e0; box-sizing: border-box; overflow: hidden;}
+        .osc-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Bottom Info Area */
+        .osc-footer { text-align: center; width: 100%; }
+        .osc-name { font-size: 26px; font-weight: bold; border-top: 2px solid #1a1a1a; border-bottom: 2px solid #1a1a1a; padding: 6px 0; }
+        .osc-dept { font-size: 18px; font-weight: bold; padding-top: 10px; }
+
+
+        /* ==================== BACK CARD CSS ==================== */
+        
+        /* Subtle Tech Watermark Background */
+        .osc-watermark {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(45deg, transparent 48%, rgba(0,0,0,0.04) 49%, rgba(0,0,0,0.04) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(0,0,0,0.04) 49%, rgba(0,0,0,0.04) 51%, transparent 52%);
+            background-size: 80px 80px; z-index: 1; pointer-events: none;
+        }
+        .osc-watermark-circle {
+            position: absolute; top: -50px; right: -50px; width: 300px; height: 300px;
+            border: 2px solid rgba(0,0,0,0.04); border-radius: 50%; z-index: 1; pointer-events: none;
+        }
+
+        /* Sideways Containers mapped precisely */
+        .osc-back-logo-group {
+            position: absolute; left: -90px; top: 260px; transform: rotate(-90deg);
+            display: flex; align-items: center; z-index: 2; width: 300px; justify-content: center;
+        }
+        
+        /* Geometric 'O' Logo */
+        .osc-o-logo {
+            width: 55px; height: 55px; border: 10px solid #2c2f33; border-radius: 50%;
+            border-bottom-color: transparent; border-right-color: transparent;
+            transform: rotate(45deg); margin-right: 15px; box-sizing: border-box;
+        }
+        
+        .osc-back-logo-text { font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 300; color: #2c2f33; letter-spacing: -2px; line-height: 0.9;}
+        .osc-back-logo-sub { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 500; color: #2c2f33; letter-spacing: 6px; padding-left: 5px; margin-top: 2px;}
+
+        /* Barcode Area */
+        .osc-back-barcode-group {
+            position: absolute; right: -125px; top: 260px; transform: rotate(-90deg);
+            display: flex; flex-direction: column; align-items: center; z-index: 2; width: 350px;
+        }
+        .osc-back-barcode { font-family: 'Libre Barcode 39', cursive; font-size: 85px; color: #2c2f33; line-height: 0.8;}
+        .osc-back-serial { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 500; letter-spacing: 14px; margin-top: 8px; color: #2c2f33; padding-left: 14px;}
+
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="osc-border">
+                    
+                    <div class="osc-header">
+                        <div class="osc-title">OSCORP</div>
+                        <div class="osc-sub">INDUSTRIES</div>
+                    </div>
+                    
+                    <div class="osc-mid">
+                        <!-- JS handles the vertical stacking dynamically -->
+                        <div class="osc-side-text sync-osc-role-vert">S<br>T<br>A<br>F<br>F</div>
+                        
+                        <div class="osc-photo-box">
+                            <img class="sync-osc-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Employee Photo">
+                        </div>
+                        
+                        <div class="osc-side-right">
+                            <span>No.</span>
+                            <!-- JS handles the vertical stacking dynamically -->
+                            <div class="sync-osc-id-vert">A<br>0<br>0<br>8<br>1<br>0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="osc-footer">
+                        <div class="osc-name sync-osc-name">Peter Parker</div>
+                        <div class="osc-dept sync-osc-dept">GENETICS LABORATORY</div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- BACK OF CARD -->
+            <div class="card-face card-back">
+                <div class="osc-watermark"></div>
+                <div class="osc-watermark-circle"></div>
+                
+                <div class="osc-back-logo-group">
+                    <div class="osc-o-logo"></div>
+                    <div>
+                        <div class="osc-back-logo-text">OSCORP</div>
+                        <div class="osc-back-logo-sub">INDUSTRIES</div>
+                    </div>
+                </div>
+
+                <div class="osc-back-barcode-group">
+                    <div class="osc-back-barcode sync-osc-serial">OSC-001</div>
+                    <div class="osc-back-serial sync-osc-serial-vert">O S C - 0 0 1</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: DAILY PLANET ID           -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-group">
+        <label>Main Header</label>
+        <input type="text" value="PRESS" oninput="document.querySelectorAll('.sync-dp-header').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>First Name</label>
+            <input type="text" value="CLARK" oninput="document.querySelectorAll('.sync-dp-first').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" value="KENT" oninput="document.querySelectorAll('.sync-dp-last').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <!-- FIXED: Wrapped Role and ID in a proper input-row grid -->
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>Role / Title</label>
+            <input type="text" value="Journalist" oninput="document.querySelectorAll('.sync-dp-role').forEach(el => el.innerText = this.value)">
+        </div>
+        <div class="input-group">
+            <label>ID Number</label>
+            <input type="text" value="1902055" oninput="document.querySelectorAll('.sync-dp-id').forEach(el => el.innerText = this.value)">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Employee Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-dp-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: DAILY PLANET ID            -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="dailyplanet-card">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Special+Elite&display=swap');
+        
+        .card-scene { width: 340px; height: 530px; perspective: 1000px; font-family: 'Oswald', sans-serif; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 6px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); overflow: hidden; backface-visibility: hidden;
+            background-color: #d6f2f4; 
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #d6f2f4; }
+
+        /* FIXED: Encoded spaces using %20 to stop CSS crash */
+        .dp-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: url('Clark%20Kent%20ID%20Badge.jpg');
+            background-size: 100% 100%; background-position: center;
+            z-index: 1; pointer-events: none;
+        }
+
+        .blocker { 
+            position: absolute; z-index: 2; display: flex; align-items: center; justify-content: flex-start; 
+            background-color: #d6f2f4; 
+            box-shadow: 0 0 6px 3px #d6f2f4; 
+            overflow: hidden; white-space: nowrap; color: #111;
+        }
+
+        .blk-header { top: 11%; left: 32%; width: 62%; height: 10%; font-family: Arial, sans-serif; font-size: 46px; font-weight: 900; letter-spacing: -1px; }
+        .blk-id { top: 29.5%; left: 32%; width: 62%; height: 6%; font-family: 'Special Elite', monospace; font-size: 24px; font-weight: bold; letter-spacing: 2px; }
+        .blk-name { top: 38.5%; left: 32%; width: 62%; height: 7%; font-size: 34px; font-weight: 700; letter-spacing: 1px; }
+        .blk-role { top: 46%; left: 32%; width: 62%; height: 6%; font-size: 30px; font-weight: 500; letter-spacing: 0.5px; }
+
+        .dp-photo-box {
+            position: absolute; top: 54.5%; left: 31.5%; width: 64%; height: 41.5%;
+            z-index: 3; background: #fff; border: 2px solid #111; box-sizing: border-box; overflow: hidden;
+        }
+        
+        .dp-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .dp-back-stripe { position: absolute; top: 15%; left: 0; width: 100%; height: 15%; background: #111; }
+        .dp-back-text { position: absolute; top: 38%; width: 80%; left: 10%; text-align: center; font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.5; }
+
+        .css-globe {
+            width: 60px; height: 60px; border: 4px solid #111; border-radius: 50%; 
+            position: relative; margin: 0 auto 15px; box-sizing: border-box;
+        }
+        .css-globe-inner {
+            position: absolute; top: -2px; left: 12px; right: 12px; bottom: -2px; 
+            border: 2px solid #111; border-radius: 50%;
+        }
+        .css-globe-line {
+            position: absolute; top: 25px; left: -2px; right: -2px; height: 2px; background: #111;
+        }
+
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="dp-bg-img"></div>
+                
+                <div class="blocker blk-header">
+                    <span class="sync-dp-header">PRESS</span>
+                </div>
+
+                <div class="blocker blk-id">
+                    <span class="sync-dp-id">1902055</span>
+                </div>
+
+                <div class="blocker blk-name">
+                    <span class="sync-dp-first">CLARK</span>&nbsp;<span class="sync-dp-last">KENT</span>
+                </div>
+
+                <div class="blocker blk-role">
+                    <span class="sync-dp-role">Journalist</span>
+                </div>
+
+                <div class="dp-photo-box">
+                    <img class="sync-dp-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Employee Photo">
+                </div>
+            </div>
+
+            <!-- BACK OF CARD -->
+            <div class="card-face card-back">
+                <div class="dp-back-stripe"></div>
+                <div class="dp-back-text">
+                    <div class="css-globe">
+                        <div class="css-globe-inner"></div>
+                        <div class="css-globe-line"></div>
+                    </div>
+                    <strong>PROPERTY OF THE DAILY PLANET</strong><br><br>
+                    This badge is the property of The Daily Planet. It must be carried at all times while on the premises and surrendered upon termination of employment.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: VINTAGE PASSPORT          -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-group">
+        <label>1. Name</label>
+        <input type="text" value="JOHN DOE" oninput="document.querySelectorAll('.sync-pass-name').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+    
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>2. Birthdate</label>
+            <input type="text" value="01 JAN 1998" oninput="document.querySelectorAll('.sync-pass-dob').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>6. Gender</label>
+            <input type="text" value="MALE" oninput="document.querySelectorAll('.sync-pass-gender').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>3. Birthplace</label>
+            <input type="text" value="NEW YORK, USA" oninput="document.querySelectorAll('.sync-pass-birth').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>7. Age</label>
+            <input type="text" value="28" oninput="document.querySelectorAll('.sync-pass-age').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>8. Nationality</label>
+        <input type="text" value="AMERICAN" oninput="document.querySelectorAll('.sync-pass-nat').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>5. Profession</label>
+        <input type="text" value="SOFTWARE ENGINEER" oninput="document.querySelectorAll('.sync-pass-prof').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>9. Signature (Type name)</label>
+        <input type="text" value="John Doe" oninput="document.querySelectorAll('.sync-pass-sig').forEach(el => el.innerText = this.value)">
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Front Traveler Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-pass-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+    
+    <!-- NEW: Back Page Photo Upload -->
+    <div class="input-group" style="margin-top:10px;">
+        <label>Back Page Photo/Stamp</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-pass-back-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: VINTAGE PASSPORT           -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="passport-card">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700&display=swap');
+        
+        .card-scene { width: 500px; height: 320px; perspective: 1000px; font-family: 'Inter', sans-serif; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        /* Base Card Styling */
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; backface-visibility: hidden;
+            background-color: #fdfaf0; /* Cream background */
+            border: 4px solid #3b2359; /* Deep purple border */
+            box-sizing: border-box;
+            color: #3b2359;
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; }
+        .card-back { transform: rotateY(180deg); z-index: 1; }
+
+        /* The CSS Star Border Trick */
+        .star-border {
+            position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px;
+            /* SVG URL-encoded star pattern */
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="%233b2359"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>') repeat space;
+            border-radius: 10px; z-index: 1;
+        }
+        .star-mask {
+            position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px;
+            background-color: #fdfaf0; z-index: 2; border-radius: 4px;
+        }
+
+        /* Reusable Decor Star */
+        .decor-star { width: 30px; height: 30px; position: absolute; z-index: 5; fill: #3b2359; }
+
+        /* ==================== FRONT CARD (DATA PAGE) ==================== */
+        .pass-front-content { position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px; z-index: 3; display: flex; padding: 15px; gap: 15px; box-sizing: border-box; }
+        
+        /* Left Column */
+        .pass-left { width: 35%; display: flex; flex-direction: column; align-items: center; }
+        .pass-photo-box { width: 100%; height: 160px; border: 1px dashed #3b2359; box-sizing: border-box; padding: 2px; position: relative;}
+        .pass-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .pass-photo-star { bottom: -15px; right: -15px; transform: rotate(15deg); }
+        
+        .pass-title-front { font-family: 'Dancing Script', cursive; font-size: 38px; margin-top: 10px; line-height: 1; }
+        .pass-sub { font-size: 8px; font-weight: 600; margin-top: 4px; text-align: center; }
+
+        /* Right Column (Grid) */
+        .pass-right { width: 65%; height: 100%; }
+        .pass-grid { display: grid; grid-template-columns: 2fr 1fr; height: 100%; border-top: 1px solid #3b2359; border-left: 1px solid #3b2359; box-sizing: border-box; }
+        .pass-cell { border-bottom: 1px solid #3b2359; border-right: 1px solid #3b2359; padding: 6px 8px; display: flex; flex-direction: column; justify-content: center; }
+        .pass-cell.full { grid-column: span 2; }
+        
+        .c-label { font-size: 9px; font-weight: 600; margin-bottom: 2px; }
+        .c-val { font-size: 12px; font-weight: 700; color: #3b2359; }
+        .c-sig { font-family: 'Dancing Script', cursive; font-size: 20px; font-weight: 400; }
+
+        /* ==================== BACK CARD (STAMP PAGE) ==================== */
+        .pass-back-content { position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px; z-index: 3; display: flex; align-items: center; padding: 15px; box-sizing: border-box; }
+        
+        .pass-title-rotated { font-family: 'Dancing Script', cursive; font-size: 60px; transform: rotate(-90deg); transform-origin: left center; position: absolute; left: 50px; top: 250px; white-space: nowrap; }
+        
+        .stamp-box { position: absolute; right: 25px; top: 25px; width: 340px; height: 230px; border: 1px dashed #3b2359; }
+        
+        /* Inner container keeps the image from bleeding out of the dashed lines */
+        .stamp-photo-inner { width: 100%; height: 100%; overflow: hidden; position: relative; }
+        .stamp-photo-inner img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .stamp-star-1 { top: -15px; right: 10px; transform: rotate(-10deg); width: 40px; height: 40px;}
+        .stamp-star-2 { bottom: -5px; left: -15px; transform: rotate(20deg); }
+
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD (Data Page) -->
+            <div class="card-face card-front">
+                <div class="star-border"></div>
+                <div class="star-mask"></div>
+                
+                <div class="pass-front-content">
+                    <div class="pass-left">
+                        <div class="pass-photo-box">
+                            <img class="sync-pass-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Photo">
+                            <svg class="decor-star pass-photo-star" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
+                        </div>
+                        <div class="pass-title-front">Passport.</div>
+                        <div class="pass-sub">signature of authorized traveler</div>
+                    </div>
+                    
+                    <div class="pass-right">
+                        <div class="pass-grid">
+                            <div class="pass-cell"><span class="c-label">1. name:</span><span class="c-val sync-pass-name">JOHN DOE</span></div>
+                            <div class="pass-cell"><span class="c-label">6. gender:</span><span class="c-val sync-pass-gender">MALE</span></div>
+                            
+                            <div class="pass-cell"><span class="c-label">2. birthdate:</span><span class="c-val sync-pass-dob">01 JAN 1998</span></div>
+                            <div class="pass-cell"><span class="c-label">7. age:</span><span class="c-val sync-pass-age">28</span></div>
+                            
+                            <div class="pass-cell"><span class="c-label">3. birthplace:</span><span class="c-val sync-pass-birth">NEW YORK, USA</span></div>
+                            <div class="pass-cell"><span class="c-label">8. nationality:</span><span class="c-val sync-pass-nat">AMERICAN</span></div>
+                            
+                            <div class="pass-cell full"><span class="c-label">5. profession:</span><span class="c-val sync-pass-prof">SOFTWARE ENGINEER</span></div>
+                            <div class="pass-cell full"><span class="c-label">9. signature:</span><span class="c-val c-sig sync-pass-sig">John Doe</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACK OF CARD (Stamp Page) -->
+            <div class="card-face card-back">
+                <div class="star-border"></div>
+                <div class="star-mask"></div>
+                
+                <div class="pass-back-content">
+                    <div class="pass-title-rotated">Passport.</div>
+                    
+                    <div class="stamp-box">
+                        <div class="stamp-photo-inner">
+                            <img class="sync-pass-back-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Back Photo">
+                        </div>
+                        <svg class="decor-star stamp-star-1" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
+                        <svg class="decor-star stamp-star-2" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

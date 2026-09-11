@@ -1,0 +1,114 @@
+<!-- ========================================== -->
+<!-- 1. SIDEBAR FORM: THIS & THAT ID            -->
+<!-- ========================================== -->
+<div class="template-specific-form">
+    
+    <div class="input-group">
+        <label>Name</label>
+        <input type="text" value="Nikaroom08" oninput="document.querySelectorAll('.sync-skz-name').forEach(el => el.innerText = this.value)">
+    </div>
+
+    <div class="input-row" style="margin-top: 10px;">
+        <div class="input-group">
+            <label>Occupancy</label>
+            <input type="text" value="STAY" oninput="document.querySelectorAll('.sync-skz-occ').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+        <div class="input-group">
+            <label>Date of Issue</label>
+            <input type="text" value="08/07/2026" oninput="document.querySelectorAll('.sync-skz-date').forEach(el => el.innerText = this.value.toUpperCase())">
+        </div>
+    </div>
+
+    <div class="input-group" style="margin-top: 10px;">
+        <label>Card Serial Number</label>
+        <input type="text" value="SKZ-080726" oninput="document.querySelectorAll('.sync-skz-serial').forEach(el => el.innerText = this.value.toUpperCase())">
+    </div>
+
+    <div class="input-group" style="margin-top:20px;">
+        <label>Member Photo</label>
+        <input type="file" accept="image/*" onchange="if(this.files[0]){ let r=new FileReader(); r.onload=e=>{ document.querySelectorAll('.sync-skz-photo').forEach(img=>img.src=e.target.result) }; r.readAsDataURL(this.files[0]) }">
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. CARD CANVAS: THIS & THAT ID             -->
+<!-- ========================================== -->
+<div class="template-specific-card" id="skz-card">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        
+        .card-scene { width: 520px; height: 320px; perspective: 1000px; font-family: 'Inter', sans-serif; }
+        .card-inner { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; backface-visibility: hidden;
+            background-color: #f2ebd9;
+        }
+        
+        .card-front { transform: rotateY(0deg); z-index: 2; }
+        .card-back { transform: rotateY(180deg); z-index: 1; border: 2px solid #dfd8c4; box-sizing: border-box; background: #f2ebd9;}
+
+        /* Fallback background image loader with absolute positioning */
+        .skz-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: url('skz-bg.jpg');
+            background-size: 100% 100%; background-position: center;
+            z-index: 1; pointer-events: none;
+        }
+
+        /* ==================== FRONT OVERLAYS ==================== */
+        .skz-photo-box {
+            position: absolute; top: 9.5%; left: 5.5%; width: 31.5%; height: 63.5%;
+            z-index: 2; background: #fff; overflow: hidden;
+        }
+        .skz-photo-box img { width: 100%; height: 100%; object-type: cover; display: block; }
+
+        .skz-text { position: absolute; z-index: 3; color: #111; white-space: nowrap; overflow: hidden; }
+
+        .skz-name { 
+            top: 45%; left: 41.5%; width: 53.5%; height: 9.5%; 
+            font-size: 24px; font-weight: 700; display: flex; align-items: center; padding-left: 6px;
+        }
+        
+        .skz-occ { top: 62.5%; left: 41.5%; font-size: 15px; font-weight: 600; }
+        .skz-date { top: 78.5%; left: 41.5%; font-size: 15px; font-weight: 600; }
+        .skz-serial { top: 90.5%; right: 18.5%; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+
+        /* ==================== BACK CARD ==================== */
+        .skz-mag-stripe { width: 100%; height: 50px; background: #1a1a1a; margin-top: 40px; position: absolute; top: 10%; left: 0;}
+        .skz-back-content { position: absolute; top: 45%; left: 10%; width: 80%; text-align: center; font-size: 13px; font-weight: 700; line-height: 1.5; color: #555; z-index: 2;}
+
+    </style>
+
+    <div class="card-scene">
+        <div class="card-inner" id="card-inner">
+            
+            <!-- FRONT OF CARD -->
+            <div class="card-face card-front">
+                <div class="skz-bg-img"></div>
+                
+                <div class="skz-photo-box">
+                    <img class="sync-skz-photo" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Photo">
+                </div>
+
+                <div class="skz-text skz-name sync-skz-name">Nikaroom08</div>
+                <div class="skz-text skz-occ sync-skz-occ">STAY</div>
+                <div class="skz-text skz-date sync-skz-date">08/07/2026</div>
+                <div class="skz-text skz-serial sync-skz-serial">SKZ-080726</div>
+            </div>
+
+            <!-- BACK OF CARD -->
+            <div class="card-face card-back">
+                <div class="skz-mag-stripe"></div>
+                <div class="skz-back-content">
+                    This identification document is the property of JYP Entertainment.<br><br>
+                    It is issued for STAY identification purposes. If found, please return to the nearest designated drop point.<br><br>
+                    <strong>STRAY KIDS EVERYWHERE ALL AROUND THE WORLD</strong>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

@@ -50,10 +50,8 @@ const templateCatalog = [
     }
 ];
 
-// --- FUSE.JS SEARCH ENGINE INTEGRATION & CACHING ---
+// --- FUSE.JS SEARCH ENGINE INTEGRATION ---
 let fuseInstance = null;
-let cachedCards = null;
-let searchTimeout = null;
 
 function initSearchEngine() {
     if (typeof Fuse !== 'undefined') {
@@ -67,34 +65,26 @@ function initSearchEngine() {
             distance: 100
         });
     }
-    // Cache grid items element references once on load for high performance
-    cachedCards = document.querySelectorAll('.grid-item');
 }
 
 function handleSearch(query) {
-    clearTimeout(searchTimeout);
+    if (!fuseInstance) initSearchEngine();
+    
+    const cards = document.querySelectorAll('.grid-item');
+    const trimmedQuery = query.trim();
 
-    // Debounce search to prevent lagging during rapid typing
-    searchTimeout = setTimeout(() => {
-        if (!fuseInstance) initSearchEngine();
-        if (!cachedCards) cachedCards = document.querySelectorAll('.grid-item');
-        
-        const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+        cards.forEach(card => card.style.display = 'inline-block');
+        return;
+    }
 
-        if (!trimmedQuery) {
-            cachedCards.forEach(card => card.classList.remove('is-hidden'));
-            return;
-        }
-
-        if (fuseInstance) {
-            const matchedIds = fuseInstance.search(trimmedQuery).map(result => result.item.id);
-            cachedCards.forEach(card => {
-                const cardId = card.getAttribute('data-template');
-                const isMatch = matchedIds.includes(cardId);
-                card.classList.toggle('is-hidden', !isMatch);
-            });
-        }
-    }, 150);
+    if (fuseInstance) {
+        const matchedIds = fuseInstance.search(trimmedQuery).map(result => result.item.id);
+        cards.forEach(card => {
+            const cardId = card.getAttribute('data-template');
+            card.style.display = matchedIds.includes(cardId) ? 'inline-block' : 'none';
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initSearchEngine);
