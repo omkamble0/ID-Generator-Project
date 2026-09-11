@@ -37,16 +37,64 @@ const templateCatalog = [
         tags: ['avengers', 'marvel', 'shield', 'superhero', 'comic', 'mcu', 'agent id', 'badge', 'security pass', 'initiative', 'nick fury']
     },
     {
-        id: 'mypaint',
-        title: 'My Own Tempo',
-        subtitle: 'Custom MS Paint Zine',
-        tags: ['my own tempo', 'ms paint', 'zine', 'art', 'doodle', 'creative', 'custom', 'drawing', 'retro pc', 'illustration']
-    },
-    {
         id: 'shield',
         title: 'S.H.I.E.L.D.',
         subtitle: 'Certificate of Identity',
         tags: ['shield', 'marvel', 'avengers', 'nick fury', 'agent', 'government badge', 'security clearance', 'certificate of identity', 'mcu', 'hydra']
+    },
+    {
+        id: 'tva',
+        title: 'TVA-LOKI.',
+        subtitle: 'TVA',
+        tags: ['tva', 'loki', 'time variance authority', 'marvel', 'mcu', 'tom hiddleston', 'timekeeper', 'variant', 'id badge']
+    },
+    {
+        id: 'passport',
+        title: 'Passport',
+        subtitle: 'Vintage Travel Document',
+        tags: ['passport', 'travel', 'vintage', 'document', 'visa', 'boarding pass', 'international', 'customs', 'id']
+    },
+    {
+        id: 'ufo',
+        title: 'UFO',
+        subtitle: 'Galactic Drivers License',
+        tags: ['ufo', 'alien', 'galactic', 'driver license', 'area 51', 'space', 'extraterrestrial', 'sci-fi', 'martian']
+    },
+    {
+        id: 'oscorp',
+        title: 'Oscorp',
+        subtitle: 'Spider-Man ID Oscorp',
+        tags: ['oscorp', 'spider man', 'spiderman', 'peter parker', 'marvel', 'norman osborn', 'science', 'badge', 'security']
+    },
+    {
+        id: 'fightclub',
+        title: 'Fight Club',
+        subtitle: 'Membership Card',
+        tags: ['fight club', 'tyler durden', 'brad pitt', 'edward norton', 'membership', 'vintage', 'soap', 'movie', 'cult classic']
+    },
+    {
+        id: 'dailyplanet',
+        title: 'Daily Planet',
+        subtitle: 'Press ID Card',
+        tags: ['daily planet', 'clark kent', 'superman', 'metropolis', 'press', 'journalist', 'dc comics', 'reporter', 'badge']
+    },
+    {
+        id: 'spotify',
+        title: 'Spotify Card',
+        subtitle: 'Shareable Lyric Quote Generator',
+        tags: ['spotify', 'music', 'song', 'lyrics', 'quote', 'album', 'artist', 'playlist', 'streaming', 'card']
+    },
+    {
+        id: 'skz',
+        title: 'This & That',
+        subtitle: 'Stray Kids ID',
+        tags: ['stray kids', 'skz', 'kpop', 'this and that', 'stay', 'korea', 'idol', 'photocard', 'card']
+    },
+    {
+        id: 'mypaint',
+        title: 'My Own Tempo',
+        subtitle: 'Custom MS Paint Zine',
+        tags: ['my own tempo', 'ms paint', 'zine', 'art', 'doodle', 'creative', 'custom', 'drawing', 'retro pc', 'illustration']
     }
 ];
 
