@@ -276,7 +276,34 @@ function downloadID() {
         return;
     }
 
-    // 3. Render the canvas with strict CORS handling
+    // 3. html2canvas bakes the element's own 3D transform into the capture.
+    // Each card back carries rotateY(180deg) so it only looks upright on screen
+    // because the parent .card-inner.is-flipped rotates 180deg back. Flatten the
+    // transforms for the capture, then restore them so the live flip is unaffected.
+    const priorStyles = [
+        [targetElement, 'transform', targetElement.style.transform],
+        [targetElement, 'backfaceVisibility', targetElement.style.backfaceVisibility],
+        [targetElement, 'transition', targetElement.style.transition]
+    ];
+    if (cardInner) {
+        priorStyles.push([cardInner, 'transform', cardInner.style.transform]);
+        priorStyles.push([cardInner, 'transition', cardInner.style.transition]);
+    }
+
+    targetElement.style.transform = 'none';
+    targetElement.style.backfaceVisibility = 'visible';
+    targetElement.style.transition = 'none';
+    if (cardInner) {
+        cardInner.style.transform = 'none';
+        cardInner.style.transition = 'none';
+    }
+
+    const restoreStyles = () => {
+        priorStyles.forEach(([el, prop, val]) => { el.style[prop] = val; });
+        downloadBtn.innerText = originalText;
+    };
+
+    // 4. Render the canvas with strict CORS handling
     html2canvas(targetElement, { 
         scale: 2, 
         useCORS: true, // Vital for cross-origin images
@@ -288,17 +315,14 @@ function downloadID() {
             // If the canvas is tainted, this next line throws an error safely
             link.href = canvas.toDataURL('image/png');
             link.click();
-            downloadBtn.innerText = originalText;
         } catch (e) {
             console.error("Canvas Security Error:", e);
             alert("Export failed! The browser blocked the download because of an external image (like a placeholder photo). Try uploading a local photo using the 'Upload Custom Photo' button first.");
-            downloadBtn.innerText = originalText;
         }
     }).catch(err => {
         console.error("html2canvas Export Error:", err);
         alert("Export failed to render. Check the browser console.");
-        downloadBtn.innerText = originalText;
-    });
+    }).finally(restoreStyles);
 }
 
 // --- BIKINI BOTTOM MASTER DATA ENGINE ---
