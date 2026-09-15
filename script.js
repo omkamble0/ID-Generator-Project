@@ -117,7 +117,7 @@ function initSearchEngine() {
 
 function handleSearch(query) {
     if (!fuseInstance) initSearchEngine();
-    
+
     const cards = document.querySelectorAll('.grid-item');
     const trimmedQuery = query.trim();
 
@@ -171,20 +171,20 @@ async function loadTemplate(templateName) {
     try {
         const response = await fetch(`templates/${templateName}.html`);
         if (!response.ok) throw new Error("Template not found");
-        
+
         const htmlText = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
-        
+
         const formHTML = doc.querySelector('.template-specific-form').innerHTML;
         const cardHTML = doc.querySelector('.template-specific-card').innerHTML;
-        
+
         formContainer.innerHTML = formHTML;
         cardContainer.innerHTML = cardHTML;
-        
+
         bindDynamicInputs();
         bindPhotoUpload();
-        
+
     } catch (error) {
         console.error("Fetch Error:", error);
         cardContainer.innerHTML = `<h3 style="color:red; background:white; padding:20px;">Error Loading Template via Live Server.</h3>`;
@@ -194,12 +194,12 @@ async function loadTemplate(templateName) {
 // Universal Sync System
 function bindDynamicInputs() {
     const inputs = document.querySelectorAll('#dynamic-editor-form input[data-sync]');
-    
+
     inputs.forEach(input => {
         input.addEventListener('input', (e) => {
             const syncKey = e.target.getAttribute('data-sync');
             const targetElements = document.querySelectorAll(`.sync-${syncKey}`);
-            
+
             targetElements.forEach(target => {
                 let val = e.target.value;
                 if (target.classList.contains('format-upper')) val = val.toUpperCase();
@@ -242,17 +242,62 @@ function toggleFlip() {
     if (card) card.classList.toggle('is-flipped');
 }
 
+// --- FULLY CORRECTED EXPORT LOGIC ---
 function downloadID() {
-    const cardInner = document.getElementById('card-inner');
-    if (!cardInner) return;
-    const isFlipped = cardInner.classList.contains('is-flipped');
-    const targetElement = isFlipped ? cardInner.querySelector('.card-back') : cardInner.querySelector('.card-front');
+    const downloadBtn = document.querySelector('.btn-action.download');
+    const originalText = downloadBtn.innerText;
+    downloadBtn.innerText = "Exporting...";
+
+    // 1. Look for the permanent container in index.html, not the stripped class
+    const templateContainer = document.getElementById('template-container');
     
-    html2canvas(targetElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Custom_ID_${isFlipped ? 'Back' : 'Front'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+    if (!templateContainer || templateContainer.innerHTML.trim() === "") {
+        alert("Error: No card template found on screen.");
+        downloadBtn.innerText = originalText;
+        return;
+    }
+
+    let targetElement;
+    const cardInner = document.getElementById('card-inner');
+
+    // 2. Logic router: Is it a 3D flip card or a flat card?
+    if (cardInner) {
+        const isFlipped = cardInner.classList.contains('is-flipped');
+        targetElement = isFlipped ? cardInner.querySelector('.card-back') : cardInner.querySelector('.card-front');
+    } else {
+        // Fallback for flat templates: ignore <style> tags and grab the actual visual card div
+        const children = Array.from(templateContainer.children);
+        targetElement = children.find(el => el.tagName.toLowerCase() !== 'style') || templateContainer;
+    }
+
+    if (!targetElement) {
+        alert("Error: Could not identify the card face to export.");
+        downloadBtn.innerText = originalText;
+        return;
+    }
+
+    // 3. Render the canvas with strict CORS handling
+    html2canvas(targetElement, { 
+        scale: 2, 
+        useCORS: true, // Vital for cross-origin images
+        backgroundColor: null 
+    }).then(canvas => {
+        try {
+            const link = document.createElement('a');
+            link.download = `ID_Studio_Export_${Math.floor(Date.now() / 1000)}.png`;
+            // If the canvas is tainted, this next line throws an error safely
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            downloadBtn.innerText = originalText;
+        } catch (e) {
+            console.error("Canvas Security Error:", e);
+            alert("Export failed! The browser blocked the download because of an external image (like a placeholder photo). Try uploading a local photo using the 'Upload Custom Photo' button first.");
+            downloadBtn.innerText = originalText;
+        }
+    }).catch(err => {
+        console.error("html2canvas Export Error:", err);
+        alert("Export failed to render. Check the browser console.");
+        downloadBtn.innerText = originalText;
     });
 }
 
@@ -273,7 +318,7 @@ window.switchSpongeBobVariant = function(type) {
     const cardWrapper = document.getElementById('bb-card-wrapper');
     const viewLicense = document.getElementById('view-license');
     const viewCredit = document.getElementById('view-credit');
-    
+
     const backTitle = document.getElementById('sb-back-title');
     const backDesc = document.getElementById('sb-back-desc');
     const backSupport = document.getElementById('sb-back-support');
@@ -287,7 +332,7 @@ window.switchSpongeBobVariant = function(type) {
     if (type === 'credit1' || type === 'credit2') {
         viewLicense.style.display = 'none';
         viewCredit.style.display = 'flex';
-        
+
         if(type === 'credit1') {
             ccBankName.innerText = "PINEAPPLE BANK";
             backSupport.innerText = "CUSTOMER SERVICE: 1-800-CALL-DAD";
@@ -302,7 +347,7 @@ window.switchSpongeBobVariant = function(type) {
     else {
         viewLicense.style.display = 'flex';
         viewCredit.style.display = 'none';
-        
+
         if (type === 'patrick_fake') {
             backTitle.innerText = "ROCK UNDER WHICH PATRICK LIVES";
             backDesc.innerText = "This card proves nothing except that the holder is certified under a rock. No driving privileges authorized whatsoever.";

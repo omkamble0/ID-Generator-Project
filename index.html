@@ -1,459 +1,841 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ID Studio | Minimal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>MemeCard // make it unofficial</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Mono:wght@400;500&family=Permanent+Marker&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <style>
-        :root {
-            --bg-color: #f9f9f9; 
-            --surface: #ffffff; 
-            --text-main: #111111;
-            --text-muted: #737373; 
-            --border: 1px solid #e5e5e5;
-            --accent: #000000; 
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.03);
-            --grid-dot: #d4d4d4;
-        }
+      :root {
+        --blue: #2388dc;
+        --lime: #eaff58;
+        --cream: #f7f4ec;
+        --coral: #53be15;
+        --ink: #152012;
+        --muted: #53625d;
+        --shadow: 5px 5px 0 var(--ink);
 
-        /* --- DARK MODE OVERRIDES --- */
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --surface: #1e1e1e;
-            --text-main: #f1f1f1;
-            --text-muted: #a0a0a0;
-            --border: 1px solid #2e2e2e;
-            --accent: #ffffff;
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.3);
-            --grid-dot: #333333;
-        }
+        /* --- CUSTOMIZABLE BACKGROUND VARIABLES --- */
+        --bg-left:#fafaf9 ;  /* Sand Dollar background */
+        --bg-right: #cb3332; /* Deep red */
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        min-height: 100%;
+        background: var(--bg-left); 
+      }
+      body {
+        font-family: Arial, Tahoma, sans-serif;
+        color: var(--ink);
+        overflow-x: hidden;
+        background-image: radial-gradient(#fff3 1px, transparent 1px);
+        background-size: 6px 6px;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      .site {
+        width: 100%;
+        margin: 0;
+        background: var(--bg-left);
+        min-height: 100vh;
+      }
+      .utility {
+        height: 42px;
+        background: var(--ink);
+        color: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        font: 11px "DM Mono";
+      }
+      .utility a {
+        color: var(--lime);
+        text-decoration: none;
+        margin-left: 18px;
+      }
+      
+      /* New styles for the color pickers */
+      .color-picker-input {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        padding: 0;
+        cursor: pointer;
+        background: transparent;
+      }
+      .color-picker-input::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      .color-picker-input::-webkit-color-swatch {
+        border: none;
+        border-radius: 50%;
+      }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.3s, color 0.3s; }
-
-        /* Hamburger Toggle Button */
-        .menu-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-            width: 40px;
-            height: 40px;
-            background: var(--surface);
-            border: var(--border);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            box-shadow: var(--shadow-subtle);
-            transition: background 0.2s, transform 0.2s;
+      .brandbar {
+        height: 78px;
+        background: var(--coral);
+        border-bottom: 4px solid var(--ink);
+        padding: 14px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .brand {
+        font: 42px "Lilita One";
+        letter-spacing: -1px;
+        color: var(--cream);
+        text-shadow: 3px 3px var(--blue);
+        transform: rotate(-2deg);
+      }
+      .header-tools {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 1px;
+      }
+      .supporter-links {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .supporter-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .supporter-links img {
+        display: block;
+        height: 42px;
+        width: auto;
+        max-width: 86px;
+        object-fit: contain;
+        border: 2px solid var(--ink);
+        background: var(--cream);
+        padding: 3px;
+      }
+      .supporter-links a:first-child img {
+        height: 42px;
+        max-width: 150px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
+      .tagline {
+        background: var(--blue);
+        color: var(--cream);
+        padding: 8px 12px;
+        font: 10px "DM Mono";
+        transform: rotate(2deg);
+      }
+      .nav {
+        height: 36px;
+        border-bottom: 2px solid var(--ink);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 24px;
+        font: 11px "DM Mono";
+        text-transform: uppercase;
+      }
+      .nav a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .nav a:hover,
+      .nav a.active {
+        color: var(--coral);
+        font-weight: 700;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 44% 56%;
+        border-bottom: 4px solid var(--ink);
+        min-height: 470px;
+      }
+      .hero-copy {
+        padding: 42px 30px;
+        position: relative;
+        overflow: hidden;
+      }
+      .eyebrow {
+        font: 11px "DM Mono";
+        color: var(--ink);
+        margin-bottom: 15px;
+      }
+      .hero-copy h1 {
+        font: 82px/0.82 "Lilita One";
+        letter-spacing: -2px;
+        color: var(--ink);
+        text-shadow: 2px 2px var(--coral);
+        position: relative;
+        z-index: 1;
+      }
+      .hero-copy h1 em {
+        display: inline;
+        color: var(--coral);
+        font-style: normal;
+        text-shadow: 2px 2px var(--blue);
+      }
+      .hero-copy p {
+        font-size: 17px;
+        line-height: 1.35;
+        max-width: 360px;
+        margin: 18px 0 20px;
+      }
+      .cta,
+      .btn-action.download {
+        display: inline-block;
+        background: var(--blue);
+        color: var(--cream);
+        text-decoration: none;
+        padding: 13px 16px;
+        border: 3px solid var(--ink);
+        box-shadow: var(--shadow);
+        font: bold 11px "DM Mono";
+        cursor: pointer;
+      }
+      .cta:hover,
+      .btn-action:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px var(--ink);
+      }
+      .scribble {
+        font: 19px "Permanent Marker";
+        color: var(--coral);
+        transform: rotate(-6deg);
+        margin-top: 13px;
+      }
+      .hero-copy:after {
+        content: "★";
+        position: absolute;
+        color: var(--lime);
+        font-size: 160px;
+        right: -45px;
+        top: -60px;
+        -webkit-text-stroke: 3px var(--ink);
+        transform: rotate(20deg);
+      }
+      .hero-art {
+        background: var(--bg-right);
+        padding: 32px 35px;
+        position: relative;
+      }
+      .hero-art:before {
+        content: "CARD OF THE WEEK";
+        position: absolute;
+        right: -32px;
+        top: 17px;
+        background: var(--lime);
+        border: 3px solid var(--ink);
+        padding: 7px 32px;
+        transform: rotate(8deg);
+        font: 10px "DM Mono";
+        z-index: 2;
+      }
+      .hero-card {
+        max-width: 500px;
+        margin: 42px auto 0;
+        background: #fff;
+        border: 4px solid var(--ink);
+        box-shadow: 11px 12px 0 var(--ink);
+        padding: 9px;
+        transform: rotate(3deg);
+      }
+      .hero-card img {
+        display: block;
+        width: 100%;
+        height: 275px;
+        object-fit: cover;
+        border: 3px solid var(--ink);
+      }
+      .hero-card figcaption {
+        font: 23px "Space Grotesk";
+        font-weight: 700;
+        padding: 9px 2px 2px;
+      }
+      .hero-card small {
+        font: 11px "DM Mono";
+        color: var(--coral);
+      }
+      .archive-wrap {
+        padding: 28px 30px 40px;
+        display: grid;
+        grid-template-columns: 30% 70%;
+        gap: 28px;
+      }
+      .manifesto {
+        font: 27px/0.98 "Permanent Marker";
+        color: var(--blue);
+        transform: rotate(-2deg);
+      }
+      .manifesto span {
+        color: var(--coral);
+      }
+      .manifesto p {
+        font: 13px/1.45 Arial;
+        color: var(--ink);
+        margin-top: 18px;
+        transform: rotate(2deg);
+      }
+      .archive-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 3px solid var(--ink);
+        padding-bottom: 7px;
+        margin-bottom: 14px;
+      }
+      .archive-head h2 {
+        font: 27px "Lilita One";
+        color: var(--coral);
+      }
+      .archive-head small {
+        font: 10px "DM Mono";
+      }
+      .grid-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .grid-item {
+        background: #fff;
+        border: 3px solid var(--ink);
+        padding: 6px;
+        box-shadow: 4px 4px var(--ink);
+        cursor: pointer;
+        transition: 0.15s;
+        min-width: 0;
+      }
+      .grid-item:nth-child(2n) {
+        background: var(--lime);
+        transform: rotate(1.5deg);
+      }
+      .grid-item:nth-child(3n) {
+        transform: rotate(-1.5deg);
+      }
+      .grid-item:hover {
+        transform: translateY(-6px) rotate(0);
+        box-shadow: 7px 8px var(--ink);
+      }
+      .template-art {
+        border: 2px solid var(--ink);
+        overflow: hidden;
+        background: #fff;
+      }
+      .template-art img {
+        display: block;
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+      .grid-item h2 {
+        font: 16px "Space Grotesk";
+        margin: 8px 1px 3px;
+        line-height: 1.05;
+      }
+      .grid-item p {
+        font: 10px "DM Mono";
+        line-height: 1.35;
+        color: var(--muted);
+      }
+      .grid-item.is-hidden {
+        display: none !important;
+      }
+      .search-bar-container {
+        grid-column: 1/-1;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 5px;
+      }
+      .search-bar-wrapper {
+        width: 260px;
+        position: relative;
+      }
+      .search-input {
+        width: 100%;
+        padding: 10px 13px;
+        border: 3px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+        font: 11px "DM Mono";
+        outline: 0;
+      }
+      .search-input:focus {
+        background: var(--lime);
+      }
+      .search-icon {
+        display: none;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .left-panel {
+        display: contents;
+      }
+      .title-block {
+        display: contents;
+      }
+      .panel-footer {
+        display: none;
+      }
+      .editor-section {
+        display: none;
+        position: fixed;
+        z-index: 20;
+        left: 0;
+        top: 0;
+        width: 350px;
+        height: 100vh;
+        background: var(--bg-left);
+        border-right: 4px solid var(--ink);
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 8px 0 0 #0003;
+      }
+      .editor-header {
+        background: var(--coral);
+        border-bottom: 3px solid var(--ink);
+        padding: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .editor-header h2 {
+        font: 23px "Lilita One";
+      }
+      .btn-back {
+        border: 2px solid var(--ink);
+        background: var(--lime);
+        padding: 8px;
+        font: 10px "DM Mono";
+        cursor: pointer;
+      }
+      .btn-back:hover {
+        background: var(--blue);
+        color: #fff;
+      }
+      .dynamic-editor-form,
+      #dynamic-editor-form {
+        padding: 22px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .input-row {
+        display: flex;
+        gap: 12px;
+      }
+      label {
+        font: 10px "DM Mono";
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      input {
+        width: 100%;
+        padding: 11px;
+        border: 2px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 0;
+      }
+      input:focus {
+        outline: 3px solid var(--lime);
+      }
+      .workspace-section {
+        display: none;
+        position: fixed;
+        z-index: 15;
+        left: 350px;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        background: var(--blue);
+        flex-direction: column;
+      }
+      .workspace-toolbar {
+        padding: 18px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        background: var(--ink);
+      }
+      .btn-action {
+        border: 3px solid var(--ink);
+        padding: 10px 14px;
+        cursor: pointer;
+        font: bold 11px "DM Mono";
+        background: var(--lime);
+        color: var(--ink);
+      }
+      .btn-action.flip {
+        background: var(--cream);
+      }
+      .canvas-area {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 35px;
+        overflow: auto;
+      }
+      .footer {
+        background: var(--ink);
+        color: var(--cream);
+        padding: 14px 28px;
+        display: flex;
+        justify-content: space-between;
+        font: 10px "DM Mono";
+      }
+      .footer b {
+        color: var(--lime);
+      }
+      @media (max-width: 800px) {
+        .header-tools {
+          gap: 5px;
         }
-        .menu-toggle:hover {
-            background: var(--bg-color);
+        .supporter-links img {
+          height: 32px;
+          max-width: 58px;
         }
-        .menu-toggle span {
-            width: 18px;
-            height: 2px;
-            background-color: var(--text-main);
-            border-radius: 2px;
-            transition: all 0.3s ease;
+        .supporter-links a:first-child img {
+          height: 32px;
+          max-width: 112px;
         }
-
-        /* Animated Hamburger to X icon when open */
-        body:not(.sidebar-closed) .menu-toggle span:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
+        .hero {
+          grid-template-columns: 1fr;
         }
-        body:not(.sidebar-closed) .menu-toggle span:nth-child(2) {
-            opacity: 0;
+        .hero-art {
+          min-height: 400px;
         }
-        body:not(.sidebar-closed) .menu-toggle span:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
+        .archive-wrap {
+          grid-template-columns: 1fr;
         }
-
-        /* Left Panel */
-        .left-panel { 
-            width: 38%; 
-            min-width: 380px; 
-            background: var(--surface); 
-            border-right: var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            z-index: 10; 
-            box-shadow: 4px 0 24px rgba(0,0,0,0.02);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, background 0.3s;
-            overflow: hidden;
+        .grid-section {
+          grid-template-columns: repeat(2, 1fr);
         }
-
-        /* Collapsed Left Panel State */
-        body.sidebar-closed .left-panel {
-            width: 0;
-            min-width: 0;
-            border-right: none;
-            opacity: 0;
-            pointer-events: none;
+        .nav {
+          gap: 12px;
+          padding: 0 14px;
+          overflow: auto;
+          white-space: nowrap;
         }
-
-        .title-block { padding: 75px 40px 40px; display: flex; flex-direction: column; flex: 1; min-width: 380px; }
-        
-        .title-block h1 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; letter-spacing: -1.5px; }
-        .title-block h1 span { font-weight: 600; }
-        .subtitle { margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
-        /* Panel Footer (Logos & Minimal Dark Mode Button) */
-        .panel-footer {
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end; 
-            gap: 12px;
+        .brandbar {
+          padding: 14px 18px;
         }
-
-        /* Minimal Dark Mode Button */
-        .dark-toggle-btn {
-            width: 36px;
-            height: 36px;
-            background: var(--surface);
-            border: var(--border);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: opacity 0.2s, transform 0.2s, background 0.2s, border-color 0.2s;
-            box-shadow: var(--shadow-subtle);
-            user-select: none;
+        .utility {
+          padding: 0 14px;
         }
-        .dark-toggle-btn:hover {
-            opacity: 0.85;
-            transform: translateY(-2px);
+        .utility span:last-child {
+          display: none;
         }
-
-        .footer-link {
-            transition: opacity 0.2s, transform 0.2s;
-            display: inline-block;
+      }
+      @media (max-width: 520px) {
+        .grid-section {
+          grid-template-columns: 1fr 1fr;
         }
-        .footer-link:hover {
-            opacity: 0.8;
-            transform: translateY(-2px);
+        .hero-copy h1 {
+          font-size: 65px;
         }
-        .footer-link img {
-            height: 36px; 
-            object-fit: contain;
-            border-radius: 6px;
+        .hero-copy {
+          padding: 32px 20px;
         }
-
-        /* Dynamic Editor Form */
-        .editor-section { display: none; flex-direction: column; flex: 1; background: var(--surface); border-top: var(--border); overflow: hidden; min-width: 380px;}
-        .editor-header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--border); }
-        .editor-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 400; }
-        .btn-back { background: transparent; border: none; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .btn-back:hover { color: var(--text-main); }
-        
-        #dynamic-editor-form { padding: 40px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; height: 100%;}
-        
-        .input-group { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-        .input-row { display: flex; gap: 20px; }
-        label { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase;}
-        input { background: var(--bg-color); border: var(--border); padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 0.95rem; border-radius: 6px; color: var(--text-main); transition: all 0.2s; width: 100%; }
-        input:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: var(--shadow-subtle); }
-
-        /* Right Panel */
-        .right-panel { flex: 1; height: 100vh; background: var(--bg-color); position: relative; overflow-y: auto; transition: background 0.3s; }
-        
-        /* Centered Adaptive Search Bar Header */
-        .search-bar-container {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background: linear-gradient(to bottom, var(--bg-color) 70%, rgba(0,0,0,0));
-            padding: 24px 60px 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
+        .hero-art {
+          padding: 24px 18px;
         }
-
-        .search-bar-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .archive-wrap {
+          padding: 22px 18px;
         }
-
-        body.sidebar-closed .search-bar-wrapper {
-            max-width: 680px;
+        .footer {
+          display: block;
+          line-height: 1.8;
         }
-
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            stroke: var(--text-muted);
-            pointer-events: none;
+        .tagline {
+          font-size: 8px;
         }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 20px 12px 46px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            background: var(--surface);
-            border: var(--border);
-            border-radius: 50px;
-            color: var(--text-main);
-            box-shadow: var(--shadow-subtle);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Masonry Layout */
-        .grid-section { 
-            columns: 300px; 
-            column-gap: 40px; 
-            padding: 20px 60px 60px; 
-        }
-
-        .grid-item { 
-            display: inline-block; 
-            width: 100%; 
-            break-inside: avoid; 
-            margin-bottom: 40px; 
-            cursor: pointer; 
-            transition: transform 0.4s; 
-        }
-
-        .grid-item:hover { transform: translateY(-5px); }
-        .grid-item.is-hidden { display: none !important; }
-        
-        .template-art { 
-            width: 100%; 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            box-shadow: var(--shadow-subtle); 
-            border: var(--border); 
-            overflow: hidden; 
-            background: var(--surface); 
-        }
-
-        .template-art img { 
-            width: 100%; 
-            height: auto; 
-            display: block; 
-            transition: transform 0.6s; 
-        }
-
-        .grid-item:hover .template-art img { transform: scale(1.05); }
-        .grid-item h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-        .grid-item p { font-size: 0.85rem; color: var(--text-muted); }
-
-        /* Workspace */
-        .workspace-section { display: none; height: 100%; width: 100%; flex-direction: column; background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px); background-size: 24px 24px; }
-        .workspace-toolbar { padding: 20px 40px; padding-left: 80px; background: transparent; display: flex; justify-content: flex-end; gap: 12px; }
-        .btn-action { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 10px 20px; cursor: pointer; border-radius: 50px; transition: 0.2s; border: none; }
-        .btn-action.flip { background: var(--surface); color: var(--text-main); border: var(--border); box-shadow: var(--shadow-subtle); }
-        .btn-action.download { background: var(--accent); color: var(--surface); }
-        .btn-action:hover { opacity: 0.85; transform: translateY(-1px); }
-        .canvas-area { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; perspective: 1200px; }
+      }
+      /* Stop the cards from stretching when JS attempts to display: block */
+      .grid-section[style*="display: block"],
+      .grid-section[style*="display: flex"] {
+        display: grid !important;
+      }
+      
+      /* Stop text/UI from misaligning when JS toggles panels */
+      .left-panel[style*="display: block"],
+      .left-panel[style*="display: flex"],
+      .title-block[style*="display: block"],
+      .title-block[style*="display: flex"],
+      .panel-footer[style*="display: block"],
+      .panel-footer[style*="display: flex"] {
+        display: contents !important;
+      }
     </style>
-</head>
-<body>
-
-    <!-- Hamburger Menu Toggle Button -->
-    <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <div class="left-panel" id="left-panel">
-        
-        <div class="title-block">
-            <div>
-                <h1>ID<br>Studio <span>Pro</span></h1>
-                <div class="subtitle">Digital Identity Canvas</div>
-            </div>
-
-            <div class="panel-footer">
-                <!-- Minimalistic Dark Mode Toggle Switch (Left of Buy Me a Coffee) -->
-                <button class="dark-toggle-btn" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode" title="Toggle Theme">
-                    <span id="theme-icon">🌙</span>
-                </button>
-
-                <a href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" class="footer-link">
-                    <img src="donate-button.png" alt="Buy Me A Coffee">
-                </a>
-                
-                <a href="#" target="_blank" class="footer-link">
-                    <img src="hetch-logo.png" alt="Hetch Logo">
-                </a>
-
-                <a href="#" target="_blank" class="footer-link">
-                    <img src="my-logo.png" alt="My Logo">
-                </a>
+  </head>
+  <body>
+    <div class="site">
+      <!-- FIXED UTILITY BAR WITH ACTUAL INPUT ELEMENTS -->
+      <header class="utility">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span>MEMECARD.NET // UNOFFICIAL INTERNET DEPARTMENT</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <input type="color" id="bg-left-picker" class="color-picker-input" value="#fafaf9" title="Left Background Color">
+              <input type="color" id="bg-right-picker" class="color-picker-input" value="#cb3332" title="Right Background Color">
             </div>
         </div>
-
-        <div class="editor-section" id="editor-section">
-            <div class="editor-header">
-                <h2>Configure Template</h2>
-                <button class="btn-back" onclick="showGrid()">Back to Gallery</button>
-            </div>
-            <div id="dynamic-editor-form"></div>
+        <span><a href="#">guestbook</a><a href="#">submit a card</a></span>
+      </header>
+      
+      <div class="brandbar">
+        <div class="brand">MemeCard</div>
+        <div class="header-tools">
+          <div class="supporter-links">
+            <a
+              href="https://www.buymeacoffee.com/YOUR_USERNAME"
+              target="_blank"
+              rel="noopener"
+              aria-label="Buy us a coffee"
+              ><img src="donate-button.png" alt="Buy us a coffee" /></a
+            ><a href="#" aria-label="Hetch logo"
+              ><img src="hetch-logo.png" alt="Hetch" /></a
+            ><a href="#" aria-label="Creator logo"
+              ><img src="my-logo.png" alt="Creator logo"
+            /></a>
+          </div>
+          <div class="tagline">make it unofficial<br />since whenever</div>
         </div>
-
-    </div>
-
-    <div class="right-panel">
-        <!-- Top Centered Search Bar -->
-        <div class="search-bar-container">
+      </div>
+      <nav class="nav">
+        <a class="active" href="#">HOME</a
+        ><a href="#grid-section">CARD ARCHIVE</a><a href="#">HOW IT WORKS</a
+        ><a href="#">ABOUT THIS THING</a>
+      </nav>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">SPECIAL INTERNET EDITION / FILE 001</div>
+          <h1>MAKE<br /><em>IT</em><br />OFFICIAL.</h1>
+          <p>
+            Pick a card from the archive, put your name on it, add a photo, and
+            download your new fake authority.
+          </p>
+          <a class="cta" href="#grid-section">BROWSE THE CARD FILES →</a>
+          <div class="scribble">no login. no payment. no reason.</div>
+        </div>
+        <div class="hero-art">
+          <figure class="hero-card">
+            <img src="mclovin-thumb.jpg" alt="Hawaii Card" />
+            <figcaption>HAWAII CARD</figcaption>
+            <small>funny / front + back / still questionable</small>
+          </figure>
+        </div>
+      </section>
+      <section class="archive-wrap">
+        <div class="manifesto">
+          THE INTERNET'S MOST <span>UNNECESSARY</span> CARD COLLECTION.
+          <p>
+            Made for friends, characters, pets and people who need a license to
+            do absolutely nothing. We collect the templates. You make the lore.
+          </p>
+        </div>
+        <div>
+          <div class="archive-head">
+            <h2>RECENT FILES</h2>
+            <small>16 templates online / all free</small>
+          </div>
+          <div class="search-bar-container">
             <div class="search-bar-wrapper">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="template-search" class="search-input" placeholder="Search templates..." oninput="handleSearch(this.value)">
+              <input
+                id="template-search"
+                class="search-input"
+                type="text"
+                placeholder="Search card files..."
+                oninput="handleSearch(this.value)"
+              />
             </div>
-        </div>
-
-        <div class="grid-section" id="grid-section">
+          </div>
+          <div class="grid-section" id="grid-section">
             <div class="grid-item template-card" data-template="mclovin">
-                <div class="template-art"><img src="mclovin-thumb.jpg" alt="McLovin"></div>
-                <h2>Hawaii DL</h2><p>The Classic McLovin Template</p>
+              <div class="template-art">
+                <img src="mclovin-thumb.jpg" alt="McLovin" />
+              </div>
+              <h2>Hawaii DL</h2>
+              <p>classic / questionable credential</p>
             </div>
-
-            <div class="grid-item template-card" data-template="spongebob-license">
-                <div class="template-art"><img src="spongebob-thumb.jpg" alt="Spongebob"></div>
-                <h2>Bikini Bottom</h2><p>Boating School License</p>
+            <div
+              class="grid-item template-card"
+              data-template="spongebob-license"
+            >
+              <div class="template-art">
+                <img src="spongebob-thumb.jpg" alt="Spongebob" />
+              </div>
+              <h2>Bikini Bottom</h2>
+              <p>character / boating school energy</p>
             </div>
-
             <div class="grid-item template-card" data-template="tyler">
-                <div class="template-art"><img src="tyler-thumb.jpg" alt="Tyler"></div>
-                <h2>Call Me If You Get Lost</h2><p>License of Travel</p>
+              <div class="template-art">
+                <img src="tyler-thumb.jpg" alt="Tyler" />
+              </div>
+              <h2>Call Me If You Get Lost</h2>
+              <p>music / travel license energy</p>
             </div>
-
             <div class="grid-item template-card" data-template="peter">
-                <div class="template-art"><img src="peter.jpg" alt="Peter"></div>
-                <h2>Peter Griffin</h2><p>Scary driving license</p>
+              <div class="template-art">
+                <img src="peter.jpg" alt="Peter Griffin" />
+              </div>
+              <h2>Peterrr Griffin</h2>
+              <p>classic / questionable driver</p>
             </div>
-            
             <div class="grid-item template-card" data-template="y2k">
-                <div class="template-art"><img src="y2k music.jpg" alt="Y2K Media Player"></div>
-                <h2>Y2K Media Player</h2><p>Windows 98 Aesthetic</p>
-            </div> 
-
+              <div class="template-art">
+                <img src="y2k music.jpg" alt="Y2K Media Player" />
+              </div>
+              <h2>Y2K Media Player</h2>
+              <p>retro / windows energy</p>
+            </div>
             <div class="grid-item template-card" data-template="avengers">
-                <div class="template-art"><img src="avengers play card.jpg" alt="Avengers"></div>
-                <h2>Avengers Initiative</h2><p>Agent ID Card</p>
+              <div class="template-art">
+                <img src="avengers play card.jpg" alt="Avengers" />
+              </div>
+              <h2>Avengers Initiative</h2>
+              <p>agent / identity card</p>
             </div>
-            
             <div class="grid-item template-card" data-template="shield">
-                <div class="template-art"><img src="shield.png" alt="Shield"></div>
-                <h2>S.H.I.E.L.D.</h2><p>Certificate of Identity</p>
+              <div class="template-art">
+                <img src="shield.png" alt="Shield" />
+              </div>
+              <h2>S.H.I.E.L.D.</h2>
+              <p>certificate / identity</p>
             </div>
-
             <div class="grid-item template-card" data-template="tva">
-                <div class="template-art"><img src="loki_tva_id.png" alt="TVA"></div>
-                <h2>TVA-LOKI.</h2><p>TVA</p>
+              <div class="template-art">
+                <img src="loki_tva_id.png" alt="TVA" />
+              </div>
+              <h2>TVA-LOKI</h2>
+              <p>timeline / official-ish</p>
             </div>
-          
             <div class="grid-item template-card" data-template="passport">
-                <div class="template-art"><img src="passport id.jpg" alt="passport"></div>
-                <h2>Passport</h2><p>Vintage Travel Document</p>
+              <div class="template-art">
+                <img src="passport id.jpg" alt="Passport" />
+              </div>
+              <h2>Passport</h2>
+              <p>vintage / travel document</p>
             </div>
-            
             <div class="grid-item template-card" data-template="ufo">
-                <div class="template-art"><img src="ufo driving.png" alt="ufo"></div>
-                <h2>UFO</h2><p>Galactic Drivers License</p>
+              <div class="template-art">
+                <img src="ufo driving.png" alt="UFO" />
+              </div>
+              <h2>UFO</h2>
+              <p>galactic / drivers license</p>
             </div>
-
             <div class="grid-item template-card" data-template="oscorp">
-                <div class="template-art"><img src="spider man front.png" alt="Spider man"></div>
-                <h2>Oscorp</h2><p>Spider-Man ID Oscorp</p>
+              <div class="template-art">
+                <img src="spider man front.png" alt="Oscorp" />
+              </div>
+              <h2>Oscorp</h2>
+              <p>spider-man / company ID</p>
             </div>
-
             <div class="grid-item template-card" data-template="fightclub">
-                <div class="template-art"><img src="fight club id card.jpg" alt="fightclub"></div>
-                <h2>Fight Club</h2><p>Membership Card</p>
+              <div class="template-art">
+                <img src="fight club id card.jpg" alt="Fight Club" />
+              </div>
+              <h2>Fight Club</h2>
+              <p>membership / rules apply</p>
             </div>
-
             <div class="grid-item template-card" data-template="dailyplanet">
-                <div class="template-art"><img src="Clark Kent ID Badge.jpg" alt="Daily Planet"></div>
-                <h2>Daily Planet</h2><p>Press ID Card</p>
+              <div class="template-art">
+                <img src="Clark Kent ID Badge.jpg" alt="Daily Planet" />
+              </div>
+              <h2>Daily Planet</h2>
+              <p>press / reporter ID</p>
             </div>
-
             <div class="grid-item template-card" data-template="spotify">
-                <div class="template-art"><img src="https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=500" alt="Spotify"></div>
-                <h2>Spotify Card</h2><p>Shareable Lyric Quote Generator</p>
+              <div class="template-art">
+                <img
+                  src="https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=500"
+                  alt="Spotify"
+                />
+              </div>
+              <h2>Spotify Card</h2>
+              <p>music / lyric quote</p>
             </div>
-
             <div class="grid-item template-card" data-template="skz">
-                <div class="template-art"><img src="skz-bg.jpg" alt="This and that"></div>
-                <h2>This & That</h2><p>Stray Kids ID</p>
+              <div class="template-art">
+                <img src="skz-bg.jpg" alt="This and That" />
+              </div>
+              <h2>This &amp; That</h2>
+              <p>music / ID card</p>
             </div>
-
-            <div class="grid-item template-card" data-template="mypaint">
-                <div class="template-art"><img src="2_4.jpg" alt="My Own Tempo"></div>
-                <h2>My Own Tempo</h2><p>Custom MS Paint Zine</p>
-            </div>
-        </div>
-
-        <div class="workspace-section" id="workspace-section">
-            <div class="workspace-toolbar">
-                <button class="btn-action flip" onclick="toggleFlip()">Flip Card</button>
-                <button class="btn-action download" onclick="downloadID()">Export High-Res</button>
-            </div>
-            <div class="canvas-area" id="template-container"></div>
-        </div>
-    </div>
-
-    <!-- Fuse.js Search Engine -->
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-    <script>
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-closed');
-        }
-
-        // --- MINIMAL DARK MODE ENGINE ---
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('id_studio_theme', newTheme);
-            updateThemeUI(newTheme);
-        }
+          </div>
+        </div>
+      </section>
+      <footer class="footer">
+        <span>MEMECARD.NET // made by the community</span
+        ><span><b>PARODY CARDS ONLY</b> </span>
+      </footer>
+    </div>
+    <div class="left-panel">
+      <div class="title-block"><div class="panel-footer"></div></div>
+      <div class="editor-section" id="editor-section">
+        <div class="editor-header">
+          <h2>Configure Card</h2>
+          <button class="btn-back" onclick="showGrid()">Back to Gallery</button>
+        </div>
+        <div id="dynamic-editor-form"></div>
+      </div>
+    </div>
+    <div class="workspace-section" id="workspace-section">
+      <div class="workspace-toolbar">
+        <button class="btn-action flip" onclick="toggleFlip()">Flip Card</button
+        ><button class="btn-action download" onclick="downloadID()">
+          Export High-Res
+        </button>
+      </div>
+      <div class="canvas-area" id="template-container"></div>
+    </div>
+    
+    <!-- SCRIPT FOR LIVE COLOR PICKING -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const leftPicker = document.getElementById('bg-left-picker');
+        const rightPicker = document.getElementById('bg-right-picker');
+        const rootVars = document.documentElement;
 
-        function updateThemeUI(theme) {
-            const icon = document.getElementById('theme-icon');
-            if (icon) {
-                icon.innerText = theme === 'dark' ? '☀️' : '🌙';
-            }
+        // Wrapped in an IF statement just to be completely safe in the future
+        if (leftPicker && rightPicker) {
+            leftPicker.addEventListener('input', (e) => {
+            rootVars.style.setProperty('--bg-left', e.target.value);
+            });
+            
+            rightPicker.addEventListener('input', (e) => {
+            rootVars.style.setProperty('--bg-right', e.target.value);
+            });
         }
-
-        // Initialize saved theme state
-        (function initTheme() {
-            const savedTheme = localStorage.getItem('id_studio_theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeUI(savedTheme);
-        })();
+      });
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
